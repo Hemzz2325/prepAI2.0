@@ -22,7 +22,9 @@ export async function POST(req) {
       );
     }
 
-    // Use the v1beta endpoint for Gemini API
+    console.log("Calling Gemini API with key:", apiKey.substring(0, 10) + "...");
+
+    // Use the correct v1beta endpoint
     const geminiRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
@@ -33,8 +35,12 @@ export async function POST(req) {
         body: JSON.stringify({
           contents: [
             {
-              parts: [{ text: prompt }],
-            },
+              parts: [
+                {
+                  text: prompt
+                }
+              ]
+            }
           ],
           generationConfig: {
             temperature: 0.7,
@@ -46,14 +52,30 @@ export async function POST(req) {
 
     const data = await geminiRes.json();
 
+    // Log the full response for debugging
+    console.log("Gemini API Response:", JSON.stringify(data, null, 2));
+
     if (!geminiRes.ok) {
       console.error("Gemini API Error:", data);
       return NextResponse.json(
         {
           error: "Gemini API request failed",
           details: data,
+          statusCode: geminiRes.status
         },
         { status: geminiRes.status }
+      );
+    }
+
+    // Validate response structure
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+      console.error("Invalid Gemini response structure:", data);
+      return NextResponse.json(
+        {
+          error: "Invalid response from Gemini API",
+          details: data,
+        },
+        { status: 500 }
       );
     }
 
@@ -71,6 +93,7 @@ export async function POST(req) {
       {
         error: "Server crashed",
         detail: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       },
       { status: 500 }
     );
