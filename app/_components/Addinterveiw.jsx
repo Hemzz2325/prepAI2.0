@@ -94,7 +94,9 @@ Generate 5 questions and answers now. ONLY return the JSON array, nothing else.`
 
       console.log("🔵 [7] Starting database insert...")
       const mockId = uuidv4()
+      const userEmail = user?.primaryEmailAddress?.emailAddress || 'anonymous'
       console.log("🔵 [8] Generated mockId:", mockId)
+      console.log("🔵 [8b] Saving with user email:", userEmail)
 
       const dbResp = await db.insert(MockInterview).values({
         mockId: mockId,
@@ -102,7 +104,7 @@ Generate 5 questions and answers now. ONLY return the JSON array, nothing else.`
         jobPosition: jobPosition,
         jobDesc: jobDesc,
         jobExperience: jobExperience,
-        createdBy: user?.primaryEmailAddress?.emailAddress || 'anonymous',
+        createdBy: userEmail,
         createdAt: moment().format('DD-MM-yyyy')
       }).returning()
 

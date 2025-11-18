@@ -29,6 +29,10 @@ const useSpeechRecognition = () => {
     recognitionRef.current = new SpeechRecognition()
     const recognition = recognitionRef.current
 
+    // Allow continuous listening
+    recognition.continuous = true
+    recognition.interimResults = true
+
     recognition.onstart = () => setIsListening(true)
     recognition.onend = () => setIsListening(false)
 
@@ -112,35 +116,57 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
   const UpdateUserAnswer = async () => {
     console.log(userAnswer)
     setLoading(true)
-    const feedbackPrompt = "Question:" + mockInterviewQuestion[activeQuestionIndex]?.question +
-      ", User Answer:" + userAnswer + ",Depends on question and user answer for give interview question " +
-      " please give us rating for answer and feedback as area of improvement if any " +
-      "in just 3 to 5 lines to improve it in JSON format with rating field and feedback field"
+    try {
+      const feedbackPrompt = "Question:" + mockInterviewQuestion[activeQuestionIndex]?.question +
+        ", User Answer:" + userAnswer + ",Depends on question and user answer for give interview question " +
+        " please give us rating for answer and feedback as area of improvement if any " +
+        "in just 3 to 5 lines to improve it in JSON format with rating field and feedback field"
 
-    const result = await chatSession.sendMessage(feedbackPrompt)
+      const result = await chatSession.sendMessage(feedbackPrompt)
 
-    const mockJsonResp = (result.response.text()).replace('``````', '')
-    console.log(mockJsonResp)
-    const JsonFeedbackResp = JSON.parse(mockJsonResp)
+      let mockJsonResp = result.response.text()
+      // Remove markdown code blocks
+      mockJsonResp = mockJsonResp
+        .replace(/```json\n?/gi, '')
+        .replace(/```\n?/gi, '')
+        .replace(/^\n+|\n+$/g, '')
+        .trim()
+      
+      // Extract JSON object if needed
+      const jsonMatch = mockJsonResp.match(/\{[\s\S]*\}/)
+      if (jsonMatch) {
+        mockJsonResp = jsonMatch[0]
+      }
+      
+      console.log('Cleaned JSON:', mockJsonResp)
+      const JsonFeedbackResp = JSON.parse(mockJsonResp)
 
-    const resp = await db.insert(UserAnswer)
-      .values({
-        mockIdRef: interviewData?.mockId,
-        question: mockInterviewQuestion[activeQuestionIndex]?.question,
-        correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
-        userAns: userAnswer,
-        feedback: JsonFeedbackResp?.feedback,
-        rating: JsonFeedbackResp?.rating,
-        userEmail: user?.primaryEmailAddress?.emailAddress,
-        createdAt: moment().format('DD-MM-yyyy')
-      })
+      const resp = await db.insert(UserAnswer)
+        .values({
+          mockIdRef: interviewData?.mockId,
+          question: mockInterviewQuestion[activeQuestionIndex]?.question,
+          correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
+          userAns: userAnswer,
+          feedback: JsonFeedbackResp?.feedback,
+          rating: JsonFeedbackResp?.rating,
+          userEmail: user?.primaryEmailAddress?.emailAddress,
+          createdAt: moment().format('DD-MM-yyyy')
+        })
 
-    if (resp) {
-      toast('User Answer recorded successfully')
-      setUserAnswer('')
+      if (resp) {
+        toast('User Answer recorded successfully')
+        setUserAnswer('')
+      }
+    } catch (error) {
+      console.error('Error updating answer:', error)
+      if (error.message.includes('429') || error.message.includes('Resource exhausted')) {
+        toast.error('API rate limit reached. Please wait a moment and try again.')
+      } else {
+        toast.error('Error saving answer: ' + error.message)
+      }
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }
 
   return (
