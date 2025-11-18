@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { db } from "@/utils/db";
-import { prepai } from "@/utils/schema";
+import { MockInterview } from "@/utils/schema";
+
+
 import { desc, eq } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
 import Addinterveiw from "../_components/Addinterveiw";
