@@ -55,18 +55,19 @@ Example format:
 `;
 
       // CALLING INTERNAL ROUTE -> /api/generate-gemini
-     const response = await fetch("/api/generate-interveiw", {
+     const response = await fetch("/api/generate-gemini", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ prompt: Inputprompt }),
 });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error("Grok API Error");
+        throw new Error(`API Error: ${result.error || "Unknown error"} - Status: ${response.status}`);
       }
 
-      const result = await response.json();
-     let MockJsonResp = result?.data || "";
+      let MockJsonResp = result?.data || "";
 
 
       // CLEAN OUTPUT

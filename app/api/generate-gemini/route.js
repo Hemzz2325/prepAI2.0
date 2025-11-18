@@ -24,9 +24,9 @@ export async function POST(req) {
 
     console.log("Calling Gemini API with key:", apiKey.substring(0, 10) + "...");
 
-    // Use the correct v1beta endpoint
+    // Use the v1 endpoint with the latest gemini-2.0-flash model
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
@@ -79,11 +79,18 @@ export async function POST(req) {
       );
     }
 
+    // Extract the text content from the Gemini response
+    const textContent = data.candidates[0].content.parts
+      .map(part => part.text)
+      .join("");
+
+    console.log("Successfully extracted text from Gemini:", textContent.substring(0, 100) + "...");
+
     return NextResponse.json(
       {
         ok: true,
         status: 200,
-        data,
+        data: textContent,
       },
       { status: 200 }
     );
