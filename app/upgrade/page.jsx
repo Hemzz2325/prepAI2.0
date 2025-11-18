@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, Crown, Zap } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Upgrade() {
   return (
@@ -35,6 +36,7 @@ export default function Upgrade() {
       {/* Pricing Plans */}
       <div className="max-w-6xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
           {/* Free Plan */}
           <div className="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
             <h3 className="text-2xl font-bold mb-2">Free</h3>
@@ -79,30 +81,12 @@ export default function Upgrade() {
             <div className="text-3xl font-bold text-blue-600 mb-6">$9.99<span className="text-lg text-gray-600">/month</span></div>
             
             <ul className="space-y-4 mb-8">
-              <li className="flex gap-3">
-                <CheckCircle className="text-blue-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Unlimited interviews</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-blue-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>10 questions per interview</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-blue-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Advanced AI feedback</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-blue-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Performance analytics</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-blue-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Interview templates</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-blue-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Priority support</span>
-              </li>
+              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>Unlimited interviews</span></li>
+              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>10 questions per interview</span></li>
+              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>Advanced AI feedback</span></li>
+              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>Performance analytics</span></li>
+              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>Interview templates</span></li>
+              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>Priority support</span></li>
             </ul>
 
             <Button className="w-full bg-blue-600 hover:bg-blue-700">Upgrade to Pro</Button>
@@ -118,30 +102,12 @@ export default function Upgrade() {
             <div className="text-3xl font-bold text-purple-600 mb-6">Custom<span className="text-lg text-gray-600">/month</span></div>
             
             <ul className="space-y-4 mb-8">
-              <li className="flex gap-3">
-                <CheckCircle className="text-purple-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Everything in Pro</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-purple-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Team collaboration</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-purple-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Custom question sets</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-purple-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Dedicated support</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-purple-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>API access</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-purple-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>SLA guarantee</span>
-              </li>
+              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>Everything in Pro</span></li>
+              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>Team collaboration</span></li>
+              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>Custom question sets</span></li>
+              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>Dedicated support</span></li>
+              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>API access</span></li>
+              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>SLA guarantee</span></li>
             </ul>
 
             <Button variant="outline" className="w-full">Contact Sales</Button>
@@ -149,11 +115,18 @@ export default function Upgrade() {
         </div>
       </div>
 
-      {/* Comparison Table */}
+      {/* Comparison Table + Animation */}
       <div className="bg-white py-16">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Feature Comparison</h2>
-          <div className="overflow-x-auto">
+
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="overflow-x-auto"
+          >
             <table className="w-full">
               <thead>
                 <tr className="border-b-2 border-gray-300">
@@ -164,72 +137,58 @@ export default function Upgrade() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-gray-200">
-                  <td className="py-4 px-4">Interviews per month</td>
-                  <td className="text-center py-4 px-4">3</td>
-                  <td className="text-center py-4 px-4">Unlimited</td>
-                  <td className="text-center py-4 px-4">Unlimited</td>
-                </tr>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <td className="py-4 px-4">Questions per interview</td>
-                  <td className="text-center py-4 px-4">5</td>
-                  <td className="text-center py-4 px-4">10</td>
-                  <td className="text-center py-4 px-4">Custom</td>
-                </tr>
-                <tr className="border-b border-gray-200">
-                  <td className="py-4 px-4">AI Feedback</td>
-                  <td className="text-center py-4 px-4">✓</td>
-                  <td className="text-center py-4 px-4">✓ Advanced</td>
-                  <td className="text-center py-4 px-4">✓ Custom</td>
-                </tr>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <td className="py-4 px-4">Performance Analytics</td>
-                  <td className="text-center py-4 px-4">-</td>
-                  <td className="text-center py-4 px-4">✓</td>
-                  <td className="text-center py-4 px-4">✓</td>
-                </tr>
-                <tr className="border-b border-gray-200">
-                  <td className="py-4 px-4">Interview Templates</td>
-                  <td className="text-center py-4 px-4">-</td>
-                  <td className="text-center py-4 px-4">✓</td>
-                  <td className="text-center py-4 px-4">✓</td>
-                </tr>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <td className="py-4 px-4">Priority Support</td>
-                  <td className="text-center py-4 px-4">-</td>
-                  <td className="text-center py-4 px-4">✓</td>
-                  <td className="text-center py-4 px-4">✓ Dedicated</td>
-                </tr>
+                {[
+                  ["Interviews per month", "3", "Unlimited", "Unlimited"],
+                  ["Questions per interview", "5", "10", "Custom"],
+                  ["AI Feedback", "✓", "✓ Advanced", "✓ Custom"],
+                  ["Performance Analytics", "-", "✓", "✓"],
+                  ["Interview Templates", "-", "✓", "✓"],
+                  ["Priority Support", "-", "✓", "✓ Dedicated"],
+                ].map((row, index) => (
+                  <motion.tr
+                    key={index}
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.4 }}
+                    viewport={{ once: true }}
+                    className={index % 2 ? "bg-gray-50 border-b border-gray-200" : "border-b border-gray-200"}
+                  >
+                    <td className="py-4 px-4">{row[0]}</td>
+                    <td className="text-center py-4 px-4">{row[1]}</td>
+                    <td className="text-center py-4 px-4">{row[2]}</td>
+                    <td className="text-center py-4 px-4">{row[3]}</td>
+                  </motion.tr>
+                ))}
               </tbody>
             </table>
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* FAQ */}
+      {/* FAQ + Animations */}
       <div className="bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="font-bold text-lg mb-2">Can I cancel my subscription anytime?</h3>
-              <p className="text-gray-600">Yes! You can cancel your subscription at any time with no penalties. Your access will continue until the end of your billing period.</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="font-bold text-lg mb-2">Do you offer refunds?</h3>
-              <p className="text-gray-600">We offer a 7-day money-back guarantee if you're not satisfied with the Pro plan.</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="font-bold text-lg mb-2">Can I switch plans?</h3>
-              <p className="text-gray-600">Absolutely! You can upgrade or downgrade your plan at any time. Billing will be adjusted accordingly.</p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="font-bold text-lg mb-2">What payment methods do you accept?</h3>
-              <p className="text-gray-600">We accept all major credit cards (Visa, Mastercard, American Express) and PayPal.</p>
-            </div>
+            {[
+              ["Can I cancel my subscription anytime?", "Yes! You can cancel your subscription at any time with no penalties. Your access will continue until the end of your billing period."],
+              ["Do you offer refunds?", "We offer a 7-day money-back guarantee if you're not satisfied with the Pro plan."],
+              ["Can I switch plans?", "Absolutely! You can upgrade or downgrade your plan at any time. Billing will be adjusted accordingly."],
+              ["What payment methods do you accept?", "We accept all major credit cards (Visa, Mastercard, American Express) and PayPal."]
+            ].map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-white p-6 rounded-lg shadow"
+              >
+                <h3 className="font-bold text-lg mb-2">{faq[0]}</h3>
+                <p className="text-gray-600">{faq[1]}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>

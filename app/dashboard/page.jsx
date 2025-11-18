@@ -8,6 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import Addinterveiw from "../_components/Addinterveiw";
 import { useRouter } from "next/navigation";
 import moment from "moment";
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
   const { user } = useUser();
@@ -49,25 +50,35 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-6 md:p-10 bg-white min-h-screen">
+    <div className="p-4 sm:p-6 md:p-10 bg-white min-h-screen max-w-6xl mx-auto">
 
-      {/* Top Section */}
-      <div className="mb-10">
-        <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
+      {/* HEADER */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="mb-8 sm:mb-10"
+      >
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
           Dashboard
         </h1>
         <p className="text-gray-500 text-sm mt-1">
           Manage your mock interviews and track your progress.
         </p>
-      </div>
+      </motion.div>
 
-      {/* Add Interview - New Stylish Box */}
-      <div className="w-full mb-12">
-        <div className="p-8 rounded-2xl border shadow-md bg-white hover:shadow-lg transition-all">
-          <h2 className="text-2xl font-semibold text-gray-900">
+      {/* ADD INTERVIEW */}
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45 }}
+        className="w-full mb-10 sm:mb-12"
+      >
+        <div className="p-6 sm:p-8 rounded-2xl border shadow-md bg-white hover:shadow-lg transition-all">
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
             Create Your Next Mock Interview
           </h2>
-          <p className="text-gray-600 mt-2 text-sm">
+          <p className="text-gray-600 mt-2 text-sm sm:text-base leading-relaxed">
             Tailored AI interview creation based on your role, experience, and difficulty.
           </p>
 
@@ -75,24 +86,28 @@ const Dashboard = () => {
             <Addinterveiw />
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Created Interviews Title */}
-      <div className="flex justify-between items-center mb-5">
-        <h2 className="text-xl font-semibold text-gray-900">
+      {/* TITLE + REFRESH */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6"
+      >
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
           Your Interviews
         </h2>
 
         <button
           onClick={GetInterviewList}
-          className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+          className="px-4 py-2 text-sm rounded-lg bg-green-600 text-white hover:bg-green-700 transition w-full sm:w-auto"
         >
           Refresh
         </button>
-      </div>
+      </motion.div>
 
-      {/* Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* INTERVIEW CARDS */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
 
         {loading ? (
           <div className="col-span-full text-center py-10">
@@ -100,14 +115,22 @@ const Dashboard = () => {
             <p className="text-gray-500 mt-3">Loading...</p>
           </div>
         ) : interviewList.length === 0 ? (
-          <div className="col-span-full text-center py-10 text-gray-500">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="col-span-full text-center py-10 text-gray-500"
+          >
             No interviews yet. Create your first above.
-          </div>
+          </motion.div>
         ) : (
           interviewList.map((interview, index) => (
-            <div
+            <motion.div
               key={index}
-              className="p-6 bg-white border rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              whileHover={{ scale: 1.03 }}
+              className="p-5 sm:p-6 bg-white border rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all cursor-pointer"
               onClick={() =>
                 router.push(`/dashboard/interveiw/${interview.mockId}`)
               }
@@ -128,9 +151,10 @@ const Dashboard = () => {
                 {moment(interview.createdAt).fromNow()}
               </p>
 
-              <div className="flex justify-between items-center mt-6 pt-4 border-t">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mt-6 pt-4 border-t">
+                
                 <button
-                  className="text-sm text-green-700 hover:underline"
+                  className="text-sm text-green-700 hover:underline w-full sm:w-auto"
                   onClick={(e) => {
                     e.stopPropagation();
                     router.push(
@@ -142,7 +166,7 @@ const Dashboard = () => {
                 </button>
 
                 <button
-                  className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                  className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition w-full sm:w-auto"
                   onClick={(e) => {
                     e.stopPropagation();
                     router.push(
@@ -153,7 +177,7 @@ const Dashboard = () => {
                   Start / Retake
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))
         )}
       </div>
