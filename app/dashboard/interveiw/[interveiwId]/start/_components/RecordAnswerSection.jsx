@@ -161,7 +161,7 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
         variant="outline" className="my-10"
         onClick={StartStopRecording}
       >
-        {isRecording ?
+        {isListening ?
           <h2 className='text-red-600 animate-pulse flex gap-2 items-center'>
             <StopCircle />Stop Recording
           </h2>

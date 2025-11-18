@@ -1,7 +1,7 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, use } from "react";
 import { db } from "@/utils/db";
-import { MockInterview, UserAnswer } from "@/utils/schema";  // ✅ FIXED LINE 5
+import { MockInterview, UserAnswer } from "@/utils/schema";
 import { eq } from "drizzle-orm";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -9,18 +9,20 @@ import Webcam from 'react-webcam'
 import { Lightbulb, WebcamIcon } from 'lucide-react'
 import Link from 'next/link'
 
-function Interview({ params }) {
+function Interview({ params: paramsPromise }) {
+  const params = use(paramsPromise)
   const [interviewData, setInterviewData] = useState()
   const [webCamEnabled, setWebCamEnabled] = useState(false)
 
   useEffect(() => {
-    console.log(params.interviewId)
+    console.log("Interview page params:", params)
+    console.log("interveiwId from params:", params.interveiwId)
     GetInterviewDetails()
   }, [])
 
   const GetInterviewDetails = async () => {
-    const result = await db.select().from(MockInterview)  // ✅ CHANGED from prepai
-      .where(eq(MockInterview.mockId, params.interviewId))  // ✅ CHANGED from prepai
+    const result = await db.select().from(MockInterview)
+      .where(eq(MockInterview.mockId, params.interveiwId))
 
     setInterviewData(result[0])
   }
@@ -61,7 +63,7 @@ function Interview({ params }) {
 
       </div>
       <div className='flex justify-end items-end'>
-        <Link href={'/dashboard/interveiw/' + params.interviewId + '/start'}>
+        <Link href={'/dashboard/interveiw/' + params.interveiwId + '/start'}>
           <Button>Start Interview</Button>
         </Link>
       </div>

@@ -16,26 +16,50 @@ function StartInterview({ params: paramsPromise }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // Debug logs
+  useEffect(() => {
+    console.log("========== START PAGE DEBUG ==========")
+    console.log("Window location href:", typeof window !== 'undefined' ? window.location.href : 'N/A')
+    console.log("Raw params from URL:", params)
+    console.log("params.interveiwId:", params?.interveiwId)
+    console.log("All params keys:", Object.keys(params || {}))
+    console.log("=========================================")
+  }, [params])
+
   useEffect(() => {
     const GetInterviewDetails = async () => {
       try {
         setLoading(true)
-        console.log("Fetching interview with ID:", params?.interveiwId)
+        const interviewId = params?.interveiwId
+        console.log("Starting GetInterviewDetails with ID:", interviewId)
         
-        if (!params?.interveiwId) {
-          setError("Interview ID not provided")
+        if (!interviewId) {
+          console.error("Interview ID is missing or undefined")
+          setError("Interview ID not provided in URL")
           setLoading(false)
           return
         }
 
-        const result = await db.select().from(MockInterview)
-          .where(eq(MockInterview.mockId, params.interveiwId))
+        console.log("Querying database for mockId:", interviewId)
+        let result = await db.select().from(MockInterview)
+          .where(eq(MockInterview.mockId, interviewId))
 
-        console.log("Query result:", result)
+        console.log("Database query result by mockId:", result)
+
+        // If not found by mockId, try querying all and find by mockId
+        if (!result || result.length === 0) {
+          console.log("Not found by mockId, trying alternate query...")
+          const allResults = await db.select().from(MockInterview)
+          console.log("All interviews in DB:", allResults)
+          
+          // Find the one with matching mockId
+          result = allResults.filter(item => item.mockId === interviewId)
+          console.log("Filtered result:", result)
+        }
 
         if (!result || result.length === 0) {
-          console.error("No interview found with ID:", params.interveiwId)
-          setError("Interview not found")
+          console.error("No interview found with ID:", interviewId)
+          setError("Interview not found. Please create a new one.")
           setLoading(false)
           return
         }

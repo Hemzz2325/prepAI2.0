@@ -31,10 +31,11 @@ function Addinterveiw() {
   const onSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    
-    console.log("Form Data:", { jobPosition, jobDesc, jobExperience })
 
-    const InputPrompt = `Generate exactly 5 interview questions and answers for the following position.
+    try {
+      console.log("🔵 [1] Form submitted with:", { jobPosition, jobDesc, jobExperience })
+
+      const InputPrompt = `Generate exactly 5 interview questions and answers for the following position.
 
 Job Position: ${jobPosition}
 Job Description/Tech Stack: ${jobDesc}
@@ -50,75 +51,76 @@ Response format - must be exactly this structure:
 
 Generate 5 questions and answers now. ONLY return the JSON array, nothing else.`
 
-    try {
-      console.log("Sending request to Gemini AI...")
+      console.log("🔵 [2] Sending to Gemini AI...")
       const result = await chatSession.sendMessage(InputPrompt)
-      let MockJsonResp = result.response.text()
+      let rawResponse = result.response.text()
+      console.log("🔵 [3] Got raw response, length:", rawResponse.length)
 
-      console.log("Raw AI Response:", MockJsonResp)
-
-      // Clean code blocks and extra characters
-      MockJsonResp = MockJsonResp
+      // Clean response
+      let cleaned = rawResponse
         .replace(/```json\n?/gi, "")
         .replace(/```\n?/g, "")
-        .replace(/^\n+|\n+$/g, "") // Remove leading/trailing newlines
+        .replace(/^\n+|\n+$/g, "")
         .trim()
 
-      // Extract JSON array if it's embedded in text
-      const jsonMatch = MockJsonResp.match(/\[\s*\{[\s\S]*\}\s*\]/);
-      if (jsonMatch) {
-        MockJsonResp = jsonMatch[0]
+      console.log("🔵 [4] After cleaning, length:", cleaned.length)
+
+      // Extract JSON array
+      const match = cleaned.match(/\[\s*\{[\s\S]*\}\s*\]/)
+      if (match) {
+        cleaned = match[0]
+        console.log("🔵 [5] Extracted JSON array, new length:", cleaned.length)
       }
 
-      console.log("Cleaned AI Response:", MockJsonResp)
-
-      // Validate JSON before parsing
-      let parsedResponse
+      // Validate JSON
+      let parsed
       try {
-        parsedResponse = JSON.parse(MockJsonResp)
-        console.log("Parsed Response:", parsedResponse)
-      } catch (parseError) {
-        console.error("JSON Parse Error:", parseError)
-        console.error("Invalid JSON string:", MockJsonResp)
-        alert(`AI returned invalid JSON: ${parseError.message}. Please try again.`)
+        parsed = JSON.parse(cleaned)
+        console.log("🔵 [6] JSON is valid! Got", parsed.length, "questions")
+      } catch (err) {
+        console.error("❌ [ERROR] Invalid JSON:", err.message)
+        alert("AI response was invalid. Please try again.")
         setLoading(false)
         return
       }
 
-      if (MockJsonResp) {
-        console.log("Inserting into database...")
-
-        const resp = await db.insert(MockInterview)
-          .values({
-            mockId: uuidv4(),
-            jsonMockResp: MockJsonResp,
-            jobPosition: jobPosition,
-            jobDesc: jobDesc,
-            jobExperience: jobExperience,
-            createdBy: user?.primaryEmailAddress?.emailAddress || 'anonymous',
-            createdAt: moment().format('DD-MM-yyyy')
-          })
-          .returning()
-
-
-        console.log("Database Insert Response:", resp)
-        console.log("Response length:", resp?.length)
-        console.log("First item:", resp?.[0])
-        console.log("MockId value:", resp?.[0]?.mockId)
-
-        if (resp && resp[0] && resp[0].mockId) {
-          console.log("Insert successful, navigating to:", resp[0].mockId)
-          setOpenDialog(false)
-          // Add a small delay to ensure data is committed
-          await new Promise(resolve => setTimeout(resolve, 500))
-          router.push('/dashboard/interveiw/' + resp[0].mockId)
-        } else {
-          console.error("Failed to get mockId from response")
-          alert("Failed to create interview. Please try again.")
-        }
+      // At this point we have valid JSON
+      if (!cleaned || cleaned.length === 0) {
+        console.error("❌ [ERROR] Cleaned JSON is empty after validation!")
+        alert("Generated questions are empty. Please try again.")
+        setLoading(false)
+        return
       }
+
+      console.log("🔵 [7] Starting database insert...")
+      const mockId = uuidv4()
+      console.log("🔵 [8] Generated mockId:", mockId)
+
+      const dbResp = await db.insert(MockInterview).values({
+        mockId: mockId,
+        jsonMockResp: cleaned,
+        jobPosition: jobPosition,
+        jobDesc: jobDesc,
+        jobExperience: jobExperience,
+        createdBy: user?.primaryEmailAddress?.emailAddress || 'anonymous',
+        createdAt: moment().format('DD-MM-yyyy')
+      }).returning()
+
+      console.log("🔵 [9] Database insert response:", dbResp)
+      console.log("🔵 [10] mockId to navigate with:", mockId)
+
+      // Now navigate
+      setOpenDialog(false)
+      await new Promise(resolve => setTimeout(resolve, 300))
+
+      const navigateUrl = `/dashboard/interveiw/${mockId}`
+      console.log("🔵 [11] Navigating to:", navigateUrl)
+      router.push(navigateUrl)
+      console.log("🔵 [12] Navigation called")
+
     } catch (error) {
-      console.error("Error:", error)
+      console.error("❌ [ERROR] Caught error:", error.message)
+      console.error("Stack:", error.stack)
       alert("Error: " + error.message)
     } finally {
       setLoading(false)

@@ -28,9 +28,9 @@ const Dashboard = () => {
       setLoading(true);
       const result = await db
         .select()
-        .from(prepai)
-        .where(eq(prepai.createdBy, user?.primaryEmailAddress?.emailAddress))
-        .orderBy(desc(prepai.createdAt));
+        .from(MockInterview)
+        .where(eq(MockInterview.createdBy, user?.primaryEmailAddress?.emailAddress))
+        .orderBy(desc(MockInterview.createdAt));
 
       setInterviewList(result);
     } catch (error) {
