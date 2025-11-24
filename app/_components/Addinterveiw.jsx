@@ -1,38 +1,38 @@
-"use client"
-import React, { useState } from 'react'
+"use client";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { chatSession } from '@/utils/GeminiAIModel'
-import { LoaderCircle } from 'lucide-react'
-import { db } from '@/utils/db'
-import { MockInterview } from '@/utils/schema'
-import { v4 as uuidv4 } from 'uuid'
-import { useUser } from '@clerk/nextjs'
-import moment from 'moment'
-import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from "framer-motion"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { chatSession } from "@/utils/GeminiAIModel";
+import { LoaderCircle } from "lucide-react";
+import { db } from "@/utils/db";
+import { MockInterview } from "@/utils/schema";
+import { v4 as uuidv4 } from "uuid";
+import { useUser } from "@clerk/nextjs";
+import moment from "moment";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+ // adjust path if used elsewhere
 
 function Addinterveiw() {
-  const [openDialog, setOpenDialog] = useState(false)
-  const [jobPosition, setJobPosition] = useState('')
-  const [jobDesc, setJobDesc] = useState('')
-  const [jobExperience, setJobExperience] = useState('')
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
-  const { user } = useUser()
+  const [openDialog, setOpenDialog] = useState(false);
+  const [jobPosition, setJobPosition] = useState("");
+  const [jobDesc, setJobDesc] = useState("");
+  const [jobExperience, setJobExperience] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { user } = useUser();
 
   const onSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-
+    e.preventDefault();
+    setLoading(true);
     try {
       const InputPrompt = `Generate exactly 5 interview questions and answers for the following position.
 
@@ -46,37 +46,39 @@ Response format - must be exactly this structure:
 [
   {"question": "What is...?", "answer": "The answer is..."},
   {"question": "How do...?", "answer": "You should..."}
-]`
+]`;
 
-      const result = await chatSession.sendMessage(InputPrompt)
-      let rawResponse = result.response.text()
+      const result = await chatSession.sendMessage(InputPrompt);
+      let rawResponse = result.response.text();
 
-      let cleaned = rawResponse
-        .replace(/```json\n?/gi, "")
-        .replace(/```\n?/g, "")
-        .replace(/^\n+|\n+$/g, "")
-        .trim()
+      // Correctly closed regular expressions!
+     let cleaned = rawResponse
+  
+  .replace(/```\n?/g, "")
+  .replace(/^\n+|\n+$/g, "")
+  .trim();
 
-      const match = cleaned.match(/\[\s*\{[\s\S]*\}\s*\]/)
-      if (match) cleaned = match[0]
 
-      let parsed
+      const match = cleaned.match(/\[\s*\{[\s\S]*\}\s*\]/);
+      if (match) cleaned = match[0];
+
+      let parsed;
       try {
-        parsed = JSON.parse(cleaned)
+        parsed = JSON.parse(cleaned);
       } catch (err) {
-        alert("AI response was invalid. Please try again.")
-        setLoading(false)
-        return
+        alert("AI response was invalid. Please try again.");
+        setLoading(false);
+        return;
       }
 
-      if (!cleaned || cleaned.length === 0) {
-        alert("Generated questions are empty. Please try again.")
-        setLoading(false)
-        return
+      if (!parsed || parsed.length === 0) {
+        alert("Generated questions are empty. Please try again.");
+        setLoading(false);
+        return;
       }
 
-      const mockId = uuidv4()
-      const userEmail = user?.primaryEmailAddress?.emailAddress || 'anonymous'
+      const mockId = uuidv4();
+      const userEmail = user?.primaryEmailAddress?.emailAddress || "anonymous";
 
       await db.insert(MockInterview).values({
         mockId: mockId,
@@ -85,40 +87,43 @@ Response format - must be exactly this structure:
         jobDesc: jobDesc,
         jobExperience: jobExperience,
         createdBy: userEmail,
-        createdAt: moment().format('DD-MM-yyyy')
-      }).returning()
+        createdAt: moment().format("DD-MM-YYYY"),
+      });
 
-      setOpenDialog(false)
-      await new Promise(res => setTimeout(res, 300))
-      router.push(`/dashboard/interveiw/${mockId}`)
-
+      setOpenDialog(false);
+      await new Promise((res) => setTimeout(res, 300));
+      router.push(`/dashboard/interveiw/${mockId}`);
     } catch (error) {
-      alert("Error: " + error.message)
+      alert("Error: " + error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div>
-
       {/* Add New box animated */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         whileHover={{ scale: 1.05 }}
         transition={{ duration: 0.25 }}
-        className='p-10 border rounded-lg bg-secondary hover:shadow-md cursor-pointer transition-all border-dashed'
+        className="p-10 border-2 border-dashed border-blue-300 bg-gradient-to-br from-green-50 to-indigo-50 rounded-xl hover:shadow-xl shadow-md cursor-pointer transition-all flex flex-col items-center"
         onClick={() => setOpenDialog(true)}
       >
-        <h2 className='text-lg text-center'>+ Add New</h2>
+        <h2 className="text-lg text-center font-bold text-indigo-600">
+          + Add New Interview
+        </h2>
+        <span className="text-xs text-gray-500 mt-1">
+          Create a custom AI interview
+        </span>
       </motion.div>
 
       {/* Dialog Animation */}
       <AnimatePresence>
         {openDialog && (
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-2xl border-2  shadow-xl rounded-2xl">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -136,9 +141,8 @@ Response format - must be exactly this structure:
 
                 <form onSubmit={onSubmit}>
                   <div className="mt-7">
-
                     {/* Job Position */}
-                    <div className='my-3'>
+                    <div className="my-3">
                       <label className="block mb-2">Job Role/Job Position</label>
                       <Input
                         placeholder="Ex. Full Stack Developer"
@@ -149,8 +153,11 @@ Response format - must be exactly this structure:
                       />
                     </div>
 
+                    {/* InterviewSelect Component */}
+                   
+
                     {/* Job Desc */}
-                    <div className='my-3'>
+                    <div className="my-3">
                       <label className="block mb-2">Job Description / Tech Stack</label>
                       <Textarea
                         placeholder="Ex. React, Angular, NodeJs, MySql etc"
@@ -162,7 +169,7 @@ Response format - must be exactly this structure:
                     </div>
 
                     {/* Experience */}
-                    <div className='my-3'>
+                    <div className="my-3">
                       <label className="block mb-2">Years of Experience</label>
                       <Input
                         placeholder="Ex. 5"
@@ -177,15 +184,14 @@ Response format - must be exactly this structure:
                     </div>
                   </div>
 
-                  <div className='flex gap-5 justify-end mt-5'>
+                  <div className="flex gap-5 justify-end mt-5">
                     <Button type="button" variant="ghost" onClick={() => setOpenDialog(false)}>
                       Cancel
                     </Button>
-
                     <Button type="submit" disabled={loading}>
                       {loading ? (
                         <>
-                          <LoaderCircle className='animate-spin mr-2' />
+                          <LoaderCircle className="animate-spin mr-2" />
                           Generating from AI
                         </>
                       ) : (
@@ -199,9 +205,8 @@ Response format - must be exactly this structure:
           </Dialog>
         )}
       </AnimatePresence>
-
     </div>
-  )
+  );
 }
 
-export default Addinterveiw
+export default Addinterveiw;

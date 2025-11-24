@@ -34,12 +34,12 @@ export default function HowItWorks() {
 
       {/* Header */}
       <motion.div 
-        className="bg-linear-to-r from-green-600 to-blue-600 text-white py-16"
+        className="bg-linear-to-r from-green-600 to-blue-600 text-white py-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}
       >
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-0 ">
           <motion.h1 
             className="text-4xl font-bold mb-4"
             initial={{ y: 20, opacity: 0 }}
@@ -91,43 +91,62 @@ export default function HowItWorks() {
       </div>
 
       {/* Features */}
-      <motion.div 
-        className="bg-white py-16"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.7 }}
-      >
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Key Features</h2>
+<motion.div 
+  className="bg-white py-16"
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  transition={{ duration: 0.7 }}
+>
+  <div className="max-w-6xl mx-auto px-4">
+    <h2 className="text-3xl font-bold text-center mb-12">Key Features</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-            {[
-              "AI-Generated Questions",
-              "Real-Time Feedback",
-              "Performance Tracking",
-              "Privacy First",
-              "Unlimited Retakes",
-              "Multiple Jobs"
-            ].map((feature, i) => (
-              <motion.div
-                key={i}
-                className="flex gap-4"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-              >
-                <CheckCircle className="text-green-600 w-6 h-6 shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-bold text-lg mb-2">{feature}</h3>
-                  <p className="text-gray-600">Lorem ipsum placeholder explanation text.</p>
-                </div>
-              </motion.div>
-            ))}
-
+      {[
+        {
+          title: "AI-Generated Questions",
+          desc: "Questions tailored to your job role, tech stack and experience."
+        },
+        {
+          title: "Real-Time Feedback",
+          desc: "Instant voice, clarity, structure and correctness analysis."
+        },
+        {
+          title: "Performance Tracking",
+          desc: "See your growth across multiple attempts with clear metrics."
+        },
+        {
+          title: "Privacy First",
+          desc: "Your videos, audio and results stay private and encrypted."
+        },
+        {
+          title: "Unlimited Retakes",
+          desc: "Practice as many times as you want and improve faster."
+        },
+        {
+          title: "Multiple Job Roles",
+          desc: "Supports developer, HR, data analyst, marketing and more."
+        }
+      ].map((item, i) => (
+        <motion.div
+          key={i}
+          className="flex gap-4"
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4, delay: i * 0.1 }}
+        >
+          <CheckCircle className="text-green-600 w-6 h-6 shrink-0 mt-1" />
+          <div>
+            <h3 className="font-bold text-lg mb-1">{item.title}</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      ))}
+
+    </div>
+  </div>
+</motion.div>
+
 
       {/* CTA */}
       <motion.div 

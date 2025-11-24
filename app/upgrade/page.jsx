@@ -26,7 +26,7 @@ export default function Upgrade() {
       </nav>
 
       {/* Header */}
-      <div className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-16">
+      <div className="bg-linear-to-r from-blue-600 to-purple-600 text-white py-6">
         <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-4xl font-bold mb-4">Upgrade Your Plan</h1>
           <p className="text-lg opacity-90">Unlock premium features and accelerate your interview preparation</p>
@@ -37,81 +37,86 @@ export default function Upgrade() {
       <div className="max-w-6xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
-          {/* Free Plan */}
-          <div className="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
-            <h3 className="text-2xl font-bold mb-2">Free</h3>
-            <p className="text-gray-600 mb-6">Perfect for getting started</p>
-            <div className="text-3xl font-bold text-green-600 mb-6">$0<span className="text-lg text-gray-600">/month</span></div>
-            
-            <ul className="space-y-4 mb-8">
-              <li className="flex gap-3">
-                <CheckCircle className="text-green-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>3 interviews per month</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-green-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>5 questions per interview</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-green-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Basic AI feedback</span>
-              </li>
-              <li className="flex gap-3">
-                <CheckCircle className="text-green-600 w-5 h-5 shrink-0 mt-0.5" />
-                <span>Privacy protected</span>
-              </li>
-            </ul>
+         {/* Free Plan */}
+<div className="bg-white rounded-xl shadow-md p-6 border border-gray-200 
+    transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-gray-300">
+  <h3 className="text-xl font-bold mb-1">Free</h3>
+  <p className="text-gray-600 mb-4 text-sm">Perfect for getting started</p>
 
-            <Link href="/dashboard">
-              <Button className="w-full bg-gray-600 hover:bg-gray-700">Get Started</Button>
-            </Link>
-          </div>
+  <div className="text-2xl font-bold text-green-600 mb-6">
+    $0 <span className="text-sm text-gray-600">/month</span>
+  </div>
 
-          {/* Pro Plan */}
-          <div className="bg-white rounded-lg shadow-xl p-8 border-2 border-blue-600 relative transform scale-105">
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold">POPULAR</span>
-            </div>
-            
-            <h3 className="text-2xl font-bold mb-2 flex items-center gap-2">
-              <Zap className="text-blue-600 w-6 h-6" />
-              Pro
-            </h3>
-            <p className="text-gray-600 mb-6">For serious job seekers</p>
-            <div className="text-3xl font-bold text-blue-600 mb-6">$9.99<span className="text-lg text-gray-600">/month</span></div>
-            
-            <ul className="space-y-4 mb-8">
-              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>Unlimited interviews</span></li>
-              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>10 questions per interview</span></li>
-              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>Advanced AI feedback</span></li>
-              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>Performance analytics</span></li>
-              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>Interview templates</span></li>
-              <li className="flex gap-3"><CheckCircle className="text-blue-600 w-5 h-5" /><span>Priority support</span></li>
-            </ul>
+  <ul className="space-y-3 mb-6 text-sm">
+    <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />3 interviews per month</li>
+    <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />5 questions per interview</li>
+    <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />Basic AI feedback</li>
+    <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />Privacy protected</li>
+  </ul>
 
-            <Button className="w-full bg-blue-600 hover:bg-blue-700">Upgrade to Pro</Button>
-          </div>
+  <Link href="/dashboard">
+    <Button className="w-full bg-gray-700 hover:bg-gray-800 text-sm py-2">Get Started</Button>
+  </Link>
+</div>
 
-          {/* Enterprise Plan */}
-          <div className="bg-white rounded-lg shadow-lg p-8 border border-purple-200">
-            <h3 className="text-2xl font-bold mb-2 flex items-center gap-2">
-              <Crown className="text-purple-600 w-6 h-6" />
-              Enterprise
-            </h3>
-            <p className="text-gray-600 mb-6">For teams and organizations</p>
-            <div className="text-3xl font-bold text-purple-600 mb-6">Custom<span className="text-lg text-gray-600">/month</span></div>
-            
-            <ul className="space-y-4 mb-8">
-              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>Everything in Pro</span></li>
-              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>Team collaboration</span></li>
-              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>Custom question sets</span></li>
-              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>Dedicated support</span></li>
-              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>API access</span></li>
-              <li className="flex gap-3"><CheckCircle className="text-purple-600 w-5 h-5" /><span>SLA guarantee</span></li>
-            </ul>
+{/* Pro Plan */}
+<div className="bg-white rounded-xl shadow-lg p-6 border-2 border-blue-600 relative 
+    transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:border-blue-700">
+  
+  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+      POPULAR
+    </span>
+  </div>
 
-            <Button variant="outline" className="w-full">Contact Sales</Button>
-          </div>
+  <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
+    <Zap className="text-blue-600 w-5 h-5" /> Pro
+  </h3>
+  <p className="text-gray-600 mb-4 text-sm">For serious job seekers</p>
+
+  <div className="text-2xl font-bold text-blue-600 mb-6">
+    $9.99 <span className="text-sm text-gray-600">/month</span>
+  </div>
+
+  <ul className="space-y-3 mb-6 text-sm">
+    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Unlimited interviews</li>
+    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />10 questions per interview</li>
+    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Advanced AI feedback</li>
+    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Performance analytics</li>
+    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Interview templates</li>
+    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Priority support</li>
+  </ul>
+
+  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-sm py-2">
+    Upgrade to Pro
+  </Button>
+</div>
+
+{/* Enterprise Plan */}
+<div className="bg-white rounded-xl shadow-md p-6 border border-purple-300
+    transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-purple-400">
+  <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
+    <Crown className="text-purple-600 w-5 h-5" /> Enterprise
+  </h3>
+  <p className="text-gray-600 mb-4 text-sm">For teams and organizations</p>
+
+  <div className="text-2xl font-bold text-purple-600 mb-6">
+    Custom <span className="text-sm text-gray-600">/month</span>
+  </div>
+
+  <ul className="space-y-3 mb-6 text-sm">
+    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Everything in Pro</li>
+    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Team collaboration</li>
+    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Custom question sets</li>
+    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Dedicated support</li>
+    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />API access</li>
+    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />SLA guarantee</li>
+  </ul>
+
+  <Button variant="outline" className="w-full text-sm py-2">
+    Contact Sales
+  </Button>
+</div>
         </div>
       </div>
 
