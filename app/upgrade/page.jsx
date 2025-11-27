@@ -170,9 +170,11 @@ export default function Upgrade() {
               <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />SLA guarantee</li>
             </ul>
 
-            <Button variant="outline" className="w-full text-sm py-2">
-              Contact Sales
-            </Button>
+            <Link href="/contact">
+              <Button variant="outline" className="w-full text-sm py-2">
+                Contact Sales
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -260,7 +262,10 @@ export default function Upgrade() {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Upgrade?</h2>
           <p className="text-lg mb-8 opacity-90">Start your Pro plan today and unlock unlimited interview practice</p>
-          <Button className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3">
+          <Button
+            className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3"
+            onClick={handlePayment}
+          >
             Upgrade Now
           </Button>
         </div>
