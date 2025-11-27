@@ -73,8 +73,8 @@ export default function Home() {
 
   // Clean white landing page
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6 relative overflow-hidden">
-      
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
+
       {/* Watermark Words Background */}
       <div className="absolute inset-0 opacity-[0.05] select-none pointer-events-none z-0">
         <Watermark />
@@ -82,80 +82,95 @@ export default function Home() {
 
       {/* Soft floating shapes */}
       <motion.div
-        className="absolute top-12 left-12 w-32 h-32 bg-green-100 rounded-full blur-3xl opacity-60"
-        animate={{ y: [0, -20, 0], x: [0, 15, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-100 rounded-full blur-[100px] opacity-40"
+        animate={{ scale: [1, 1.1, 1], rotate: [0, 10, 0] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-16 right-16 w-40 h-40 bg-blue-100 rounded-full blur-3xl opacity-50"
-        animate={{ y: [0, 25, 0], x: [0, -20, 0] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-[100px] opacity-40"
+        animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Card */}
+      {/* Main Content */}
       <motion.div
-        initial={{ opacity: 0, y: 50, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative z-10 max-w-md w-full bg-white rounded-3xl shadow-[0_6px_30px_rgba(0,0,0,0.08)] p-10 border border-gray-100 backdrop-blur-lg"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-10 max-w-3xl w-full text-center"
       >
-        
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-          className="text-center mb-8"
-        >
-          <h1 className="text-4xl font-extrabold text-green-600 tracking-tight">
-            PrepAi
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">
-            Your AI-powered mock interview accelerator.
-          </p>
-        </motion.div>
 
-        {/* Welcome Box */}
+        {/* Logo/Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6 shadow-sm"
+          className="inline-block mb-6 px-4 py-1.5 rounded-full bg-green-50 border border-green-100 text-green-700 text-sm font-medium shadow-sm"
         >
-          <h2 className="text-lg font-semibold text-gray-800">Welcome!</h2>
-          <p className="text-sm text-gray-600 mt-1">
-            Get personalized questions and real-time analysis.
-          </p>
+          ✨ Your Personal AI Interview Coach
         </motion.div>
 
-        {/* Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
+        {/* Hero Title */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="space-y-4"
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="text-5xl md:text-7xl font-extrabold text-gray-900 tracking-tight mb-6 leading-tight"
+        >
+          Master Your <br className="hidden md:block" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
+            Next Interview
+          </span>
+        </motion.h1>
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed"
+        >
+          Practice with AI-generated questions, get real-time feedback, and analyze your resume to land your dream job.
+        </motion.p>
+
+        {/* Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
           <SignInButton mode="modal">
-            <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 shadow-md transition-all rounded-xl">
-              Sign In
+            <Button size="lg" className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-6 px-8 text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+              Get Started Free
             </Button>
           </SignInButton>
 
           <SignUpButton mode="modal">
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 shadow-md transition-all rounded-xl">
-              Sign Up
+            <Button variant="outline" size="lg" className="w-full sm:w-auto border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-bold py-6 px-8 text-lg rounded-full hover:bg-gray-50 transition-all">
+              Create Account
             </Button>
           </SignUpButton>
         </motion.div>
 
-        {/* Footer */}
+        {/* Social Proof / Trust */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="mt-6 pt-6 border-t border-gray-200 text-center text-gray-500 text-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 1 }}
+          className="mt-12 pt-8 border-t border-gray-100 flex flex-col items-center gap-3"
         >
-          Start preparing for your next interview today.
+          <div className="flex -space-x-2">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-500">
+                {String.fromCharCode(64 + i)}
+              </div>
+            ))}
+            <div className="w-8 h-8 rounded-full bg-green-100 border-2 border-white flex items-center justify-center text-xs font-bold text-green-700">
+              +1k
+            </div>
+          </div>
+          <p className="text-sm text-gray-500">Join thousands of job seekers preparing today.</p>
         </motion.div>
 
       </motion.div>

@@ -67,127 +67,88 @@ const Dashboard = () => {
         </p>
       </motion.div>
 
-      {/* CREATE INTERVIEW */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="mb-14"
-      >
-        <div className="p-5 sm:p-6 rounded-xl border bg-white shadow-sm hover:shadow-lg transition-all">
+      {/* ACTION GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
-                Create a New Interview
+        {/* CREATE INTERVIEW CARD */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="md:col-span-2"
+        >
+          <div className="p-6 rounded-2xl border bg-white shadow-sm hover:shadow-xl transition-all duration-300 h-full">
+            <Addinterveiw />
+          </div>
+        </motion.div>
+
+        {/* CODING INTERVIEW CARD */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.15 }}
+          onClick={() => router.push('/dashboard/coding')}
+          className="cursor-pointer group"
+        >
+          <div className="p-6 rounded-2xl border bg-white shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-green-100 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+
+            <div className="relative z-10">
+              <h2 className="text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors">
+                Coding Interview
               </h2>
-              <p className="text-gray-500 text-xs sm:text-sm mt-1">
-                Quick setup. Just enter job details and you're good to go.
+              <p className="text-gray-500 text-sm mt-1">
+                Practice DSA problems with AI help.
               </p>
             </div>
 
-          
+            <div className="mt-auto pt-8 flex justify-center">
+              <div className="p-4 rounded-full bg-green-50 group-hover:bg-green-100 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-green-600">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+                </svg>
+              </div>
+            </div>
+
+            <div className="mt-4 text-center">
+              <span className="text-sm font-semibold text-green-600 group-hover:underline">Start Coding &rarr;</span>
+            </div>
           </div>
+        </motion.div>
 
-          <div className="mt-3">
-            <Addinterveiw />
-          </div>
-        </div>
-      </motion.div>
-
-      {/* LIST HEADER */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex items-center justify-between mb-6"
-      >
-        <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
-          Your Interviews
-        </h2>
-
-        <button
-          onClick={GetInterviewList}
-          className="px-4 py-2 text-sm rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+        {/* RESUME ANALYZER CARD */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          onClick={() => router.push('/dashboard/resume')}
+          className="cursor-pointer group"
         >
-          Refresh
-        </button>
-      </motion.div>
+          <div className="p-6 rounded-2xl border bg-white shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-100 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
 
-      {/* INTERVIEW GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="relative z-10">
+              <h2 className="text-xl font-bold text-gray-900 group-hover:text-purple-600 transition-colors">
+                Resume Analyzer
+              </h2>
+              <p className="text-gray-500 text-sm mt-1">
+                Get instant ATS feedback.
+              </p>
+            </div>
 
-        {loading ? (
-          <div className="col-span-full text-center py-10">
-            <div className="animate-spin h-8 w-8 rounded-full border-b-2 border-green-600 mx-auto"></div>
-            <p className="text-gray-500 mt-3">Loading...</p>
+            <div className="mt-auto pt-8 flex justify-center">
+              <div className="p-4 rounded-full bg-purple-50 group-hover:bg-purple-100 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-purple-600">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
+              </div>
+            </div>
+
+            <div className="mt-4 text-center">
+              <span className="text-sm font-semibold text-purple-600 group-hover:underline">Analyze Resume &rarr;</span>
+            </div>
           </div>
-        ) : interviewList.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="col-span-full text-center py-12 text-gray-500"
-          >
-            No interviews yet. Create one above.
-          </motion.div>
-        ) : (
-          interviewList.map((interview, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-              whileHover={{ scale: 1.02 }}
-              className="p-6 bg-white border rounded-xl shadow-sm hover:shadow-lg transition-all cursor-pointer"
-              onClick={() =>
-                router.push(`/dashboard/interveiw/${interview.mockId}`)
-              }
-            >
-              <div className="flex justify-between items-start mb-3">
-                <h3 className="font-semibold text-lg text-gray-900 leading-snug">
-                  {interview.jobPosition}
-                </h3>
-                <span className="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">
-                  Ready
-                </span>
-              </div>
-
-              <p className="text-gray-600 text-sm mb-1">
-                {interview.jobExperience} years experience
-              </p>
-
-              <p className="text-xs text-gray-500 mb-4">
-                {moment(interview.createdAt).fromNow()}
-              </p>
-
-              <div className="flex items-center justify-between pt-4 border-t">
-                <button
-                  className="text-sm text-green-700 hover:underline"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    router.push(
-                      `/dashboard/interveiw/${interview.mockId}/feedback`
-                    );
-                  }}
-                >
-                  Feedback
-                </button>
-
-                <button
-                  className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    router.push(
-                      `/dashboard/interveiw/${interview.mockId}/start`
-                    );
-                  }}
-                >
-                  Start / Retake
-                </button>
-              </div>
-            </motion.div>
-          ))
-        )}
+        </motion.div>
       </div>
     </div>
   );

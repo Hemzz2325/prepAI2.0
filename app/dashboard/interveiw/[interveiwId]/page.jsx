@@ -49,6 +49,10 @@ function Interview({ params: paramsPromise }) {
             <h2 className="text-base sm:text-lg">
               <strong>Years of Experience:</strong> {interviewData?.jobExperience}
             </h2>
+
+            <h2 className="text-base sm:text-lg">
+              <strong>Interview Round:</strong> {interviewData?.interviewRound}
+            </h2>
           </div>
 
           <div className="p-4 sm:p-5 border rounded-lg border-yellow-300 bg-yellow-100">
@@ -58,7 +62,7 @@ function Interview({ params: paramsPromise }) {
             </h2>
 
             <h2 className="mt-3 text-yellow-600 text-xs sm:text-sm leading-relaxed">
-              Enable Video Web Cam and Microphone to Start your AI Generated Mock Interview. 
+              Enable Video Web Cam and Microphone to Start your AI Generated Mock Interview.
               It has 5 questions you can answer, and at the end you will get a report based on your answers.
               We never record your video; you can disable webcam access anytime.
             </h2>

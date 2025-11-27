@@ -122,7 +122,29 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
         " please give us rating for answer and feedback as area of improvement if any " +
         "in just 3 to 5 lines to improve it in JSON format with rating field and feedback field"
 
-      const result = await chatSession.sendMessage(feedbackPrompt)
+      // Retry logic with exponential backoff
+      let retries = 3
+      let delay = 1000 // Start with 1 second
+      let result = null
+
+      for (let i = 0; i < retries; i++) {
+        try {
+          result = await chatSession.sendMessage(feedbackPrompt)
+          break // Success, exit retry loop
+        } catch (error) {
+          if (error.message.includes('429') || error.message.includes('Resource exhausted')) {
+            if (i < retries - 1) {
+              console.log(`Rate limit hit, retrying in ${delay}ms...`)
+              await new Promise(resolve => setTimeout(resolve, delay))
+              delay *= 2 // Exponential backoff
+            } else {
+              throw new Error('API rate limit exceeded. Please wait a moment before recording another answer.')
+            }
+          } else {
+            throw error // Re-throw non-rate-limit errors
+          }
+        }
+      }
 
       let mockJsonResp = result.response.text()
       // Remove markdown code blocks
@@ -131,13 +153,13 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
         .replace(/```\n?/gi, '')
         .replace(/^\n+|\n+$/g, '')
         .trim()
-      
+
       // Extract JSON object if needed
       const jsonMatch = mockJsonResp.match(/\{[\s\S]*\}/)
       if (jsonMatch) {
         mockJsonResp = jsonMatch[0]
       }
-      
+
       console.log('Cleaned JSON:', mockJsonResp)
       const JsonFeedbackResp = JSON.parse(mockJsonResp)
 
@@ -160,7 +182,7 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
     } catch (error) {
       console.error('Error updating answer:', error)
       if (error.message.includes('429') || error.message.includes('Resource exhausted')) {
-        toast.error('API rate limit reached. Please wait a moment and try again.')
+        toast.error('API rate limit reached. Please wait 10-15 seconds before recording another answer.')
       } else {
         toast.error('Error saving answer: ' + error.message)
       }
@@ -170,32 +192,46 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
   }
 
   return (
-    <div className='flex items-center justify-center flex-col'>
-      <div className='flex flex-col mt-20 justify-center items-center bg-black rounded-lg p-5'>
-        <Image src={'/webcam.png'} width={200} height={200} alt="Webcam icon" className='absolute' />
+    <div className='flex items-center justify-center flex-col h-full max-h-[calc(100vh-200px)]'>
+      <div className='flex flex-col justify-center items-center bg-black rounded-2xl p-1 w-full relative overflow-hidden shadow-lg border-4 border-gray-900'>
+        <Image src={'/webcam.png'} width={150} height={150} alt="Webcam icon" className='absolute opacity-50' />
         <Webcam
           mirrored={true}
           style={{
-            height: 300,
+            height: '100%',
             width: '100%',
             zIndex: 10,
+            borderRadius: '12px',
+            aspectRatio: '16/9',
+            maxHeight: '400px'
           }}
         />
       </div>
-      <Button
-        disabled={loading}
-        variant="outline" className="my-10"
-        onClick={StartStopRecording}
-      >
-        {isListening ?
-          <h2 className='text-red-600 animate-pulse flex gap-2 items-center'>
-            <StopCircle />Stop Recording
-          </h2>
-          :
-          <h2 className='text-primary flex gap-2 items-center'>
-            <Mic /> Record Answer</h2>
-        }
-      </Button>
+
+      <div className="mt-6 w-full">
+        <Button
+          disabled={loading}
+          className={`w-full py-6 text-base font-bold rounded-full transition-all transform hover:-translate-y-1 shadow-xl
+            ${isListening
+              ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse'
+              : 'bg-blue-600 hover:bg-blue-700 text-white'}
+            `}
+          onClick={StartStopRecording}
+        >
+          {isListening ? (
+            <span className='flex gap-2 items-center justify-center'>
+              <StopCircle className="h-6 w-6" /> Stop Recording
+            </span>
+          ) : (
+            <span className='flex gap-2 items-center justify-center'>
+              <Mic className="h-6 w-6" /> Record Answer
+            </span>
+          )}
+        </Button>
+        <p className="text-center text-gray-400 mt-3 text-xs">
+          {isListening ? "Listening... Speak clearly." : "Click to start recording your answer."}
+        </p>
+      </div>
     </div>
   )
 }

@@ -4,8 +4,62 @@ import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle, Crown, Zap } from "lucide-react";
 import { motion } from "framer-motion";
+import { useUser } from "@clerk/nextjs";
+import Script from "next/script";
 
 export default function Upgrade() {
+  const { user } = useUser();
+
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  const handlePayment = async () => {
+    const res = await loadRazorpay();
+
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_placeholder", // Enter the Key ID generated from the Dashboard
+      amount: 99900, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: "INR",
+      name: "PrepAi Pro",
+      description: "Upgrade to Pro Plan",
+      image: "/logo.svg",
+      // order_id: "order_9A33XWu170g87H", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      handler: function (response) {
+        alert("Payment Successful: " + response.razorpay_payment_id);
+        // You can call an API here to save the payment details
+      },
+      prefill: {
+        name: user?.fullName,
+        email: user?.primaryEmailAddress?.emailAddress,
+        contact: "9999999999",
+      },
+      notes: {
+        address: "PrepAi Corporate Office",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  };
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
@@ -36,87 +90,90 @@ export default function Upgrade() {
       {/* Pricing Plans */}
       <div className="max-w-6xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-         {/* Free Plan */}
-<div className="bg-white rounded-xl shadow-md p-6 border border-gray-200 
+
+          {/* Free Plan */}
+          <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200 
     transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-gray-300">
-  <h3 className="text-xl font-bold mb-1">Free</h3>
-  <p className="text-gray-600 mb-4 text-sm">Perfect for getting started</p>
+            <h3 className="text-xl font-bold mb-1">Free</h3>
+            <p className="text-gray-600 mb-4 text-sm">Perfect for getting started</p>
 
-  <div className="text-2xl font-bold text-green-600 mb-6">
-    $0 <span className="text-sm text-gray-600">/month</span>
-  </div>
+            <div className="text-2xl font-bold text-green-600 mb-6">
+              $0 <span className="text-sm text-gray-600">/month</span>
+            </div>
 
-  <ul className="space-y-3 mb-6 text-sm">
-    <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />3 interviews per month</li>
-    <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />5 questions per interview</li>
-    <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />Basic AI feedback</li>
-    <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />Privacy protected</li>
-  </ul>
+            <ul className="space-y-3 mb-6 text-sm">
+              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />3 interviews per month</li>
+              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />5 questions per interview</li>
+              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />Basic AI feedback</li>
+              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />Privacy protected</li>
+            </ul>
 
-  <Link href="/dashboard">
-    <Button className="w-full bg-gray-700 hover:bg-gray-800 text-sm py-2">Get Started</Button>
-  </Link>
-</div>
+            <Link href="/dashboard">
+              <Button className="w-full bg-gray-700 hover:bg-gray-800 text-sm py-2">Get Started</Button>
+            </Link>
+          </div>
 
-{/* Pro Plan */}
-<div className="bg-white rounded-xl shadow-lg p-6 border-2 border-blue-600 relative 
+          {/* Pro Plan */}
+          <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-blue-600 relative 
     transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:border-blue-700">
-  
-  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
-      POPULAR
-    </span>
-  </div>
 
-  <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
-    <Zap className="text-blue-600 w-5 h-5" /> Pro
-  </h3>
-  <p className="text-gray-600 mb-4 text-sm">For serious job seekers</p>
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                POPULAR
+              </span>
+            </div>
 
-  <div className="text-2xl font-bold text-blue-600 mb-6">
-    $9.99 <span className="text-sm text-gray-600">/month</span>
-  </div>
+            <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
+              <Zap className="text-blue-600 w-5 h-5" /> Pro
+            </h3>
+            <p className="text-gray-600 mb-4 text-sm">For serious job seekers</p>
 
-  <ul className="space-y-3 mb-6 text-sm">
-    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Unlimited interviews</li>
-    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />10 questions per interview</li>
-    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Advanced AI feedback</li>
-    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Performance analytics</li>
-    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Interview templates</li>
-    <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Priority support</li>
-  </ul>
+            <div className="text-2xl font-bold text-blue-600 mb-6">
+              $9.99 <span className="text-sm text-gray-600">/month</span>
+            </div>
 
-  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-sm py-2">
-    Upgrade to Pro
-  </Button>
-</div>
+            <ul className="space-y-3 mb-6 text-sm">
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Unlimited interviews</li>
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />10 questions per interview</li>
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Advanced AI feedback</li>
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Performance analytics</li>
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Interview templates</li>
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Priority support</li>
+            </ul>
 
-{/* Enterprise Plan */}
-<div className="bg-white rounded-xl shadow-md p-6 border border-purple-300
+            <Button
+              className="w-full bg-blue-600 hover:bg-blue-700 text-sm py-2"
+              onClick={handlePayment}
+            >
+              Upgrade to Pro
+            </Button>
+          </div>
+
+          {/* Enterprise Plan */}
+          <div className="bg-white rounded-xl shadow-md p-6 border border-purple-300
     transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-purple-400">
-  <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
-    <Crown className="text-purple-600 w-5 h-5" /> Enterprise
-  </h3>
-  <p className="text-gray-600 mb-4 text-sm">For teams and organizations</p>
+            <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
+              <Crown className="text-purple-600 w-5 h-5" /> Enterprise
+            </h3>
+            <p className="text-gray-600 mb-4 text-sm">For teams and organizations</p>
 
-  <div className="text-2xl font-bold text-purple-600 mb-6">
-    Custom <span className="text-sm text-gray-600">/month</span>
-  </div>
+            <div className="text-2xl font-bold text-purple-600 mb-6">
+              Custom <span className="text-sm text-gray-600">/month</span>
+            </div>
 
-  <ul className="space-y-3 mb-6 text-sm">
-    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Everything in Pro</li>
-    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Team collaboration</li>
-    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Custom question sets</li>
-    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Dedicated support</li>
-    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />API access</li>
-    <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />SLA guarantee</li>
-  </ul>
+            <ul className="space-y-3 mb-6 text-sm">
+              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Everything in Pro</li>
+              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Team collaboration</li>
+              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Custom question sets</li>
+              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Dedicated support</li>
+              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />API access</li>
+              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />SLA guarantee</li>
+            </ul>
 
-  <Button variant="outline" className="w-full text-sm py-2">
-    Contact Sales
-  </Button>
-</div>
+            <Button variant="outline" className="w-full text-sm py-2">
+              Contact Sales
+            </Button>
+          </div>
         </div>
       </div>
 

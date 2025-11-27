@@ -8,7 +8,8 @@ export const MockInterview = pgTable('mockInterview', {
     jobExperience: varchar('jobExperience').notNull(),
     createdBy: varchar('createdBy').notNull(),
     createdAt: varchar('createdAt'),
-    mockId: varchar('mockId').notNull()
+    mockId: varchar('mockId').notNull(),
+    interviewRound: varchar('interviewRound').notNull().default('Technical Round')
 });
 
 export const UserAnswer = pgTable('userAnswer', {
@@ -20,5 +21,19 @@ export const UserAnswer = pgTable('userAnswer', {
     feedback: text('feedback'),
     rating: varchar('rating'),
     userEmail: varchar('userEmail'),
+    createdAt: varchar('createdAt')
+});
+
+export const CodingSubmission = pgTable('codingSubmission', {
+    id: serial('id').primaryKey(),
+    userEmail: varchar('userEmail').notNull(),
+    challengeTitle: varchar('challengeTitle').notNull(),
+    difficulty: varchar('difficulty').notNull(),
+    topic: varchar('topic').notNull(),
+    language: varchar('language').notNull(),
+    code: text('code').notNull(),
+    solved: varchar('solved').notNull().default('false'),
+    timeComplexity: varchar('timeComplexity'),
+    spaceComplexity: varchar('spaceComplexity'),
     createdAt: varchar('createdAt')
 });

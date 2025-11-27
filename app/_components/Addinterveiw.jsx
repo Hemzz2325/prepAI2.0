@@ -19,13 +19,14 @@ import { useUser } from "@clerk/nextjs";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
- // adjust path if used elsewhere
+// adjust path if used elsewhere
 
 function Addinterveiw() {
   const [openDialog, setOpenDialog] = useState(false);
   const [jobPosition, setJobPosition] = useState("");
   const [jobDesc, setJobDesc] = useState("");
   const [jobExperience, setJobExperience] = useState("");
+  const [interviewRound, setInterviewRound] = useState("Technical Round");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { user } = useUser();
@@ -34,7 +35,24 @@ function Addinterveiw() {
     e.preventDefault();
     setLoading(true);
     try {
-      const InputPrompt = `Generate exactly 5 interview questions and answers for the following position.
+      let InputPrompt = "";
+
+      if (interviewRound === "Technical Round") {
+        InputPrompt = `Generate exactly 5 technical interview questions and answers for the following position.
+        
+Job Position: ${jobPosition}
+Job Description/Tech Stack: ${jobDesc}
+Years of Experience: ${jobExperience}
+
+IMPORTANT: You MUST respond with ONLY a valid JSON array. No other text before or after.
+
+Response format - must be exactly this structure:
+[
+  {"question": "What is...?", "answer": "The answer is..."},
+  {"question": "How do...?", "answer": "You should..."}
+]`;
+      } else if (interviewRound === "Managerial Round") {
+        InputPrompt = `Generate exactly 5 managerial and behavioral interview questions and answers for the following position. Focus on leadership, conflict resolution, and soft skills.
 
 Job Position: ${jobPosition}
 Job Description/Tech Stack: ${jobDesc}
@@ -47,16 +65,40 @@ Response format - must be exactly this structure:
   {"question": "What is...?", "answer": "The answer is..."},
   {"question": "How do...?", "answer": "You should..."}
 ]`;
+      } else if (interviewRound === "Aptitude & Scenario-Based Round") {
+        InputPrompt = `Generate exactly 5 general aptitude, logical reasoning, and scenario-based questions. 
+        
+        IMPORTANT: 
+        - Do NOT ask technical coding questions. 
+        - Focus on quantitative aptitude, logical reasoning, and general workplace scenarios (e.g., time management, ethics).
+        - The questions should be suitable for a professional with ${jobExperience} years of experience, but NOT specific to the tech stack.
+        - Provide 4 options for each question.
+
+Job Position: ${jobPosition} (For context only, do not focus on technical details)
+Years of Experience: ${jobExperience}
+
+IMPORTANT: You MUST respond with ONLY a valid JSON array. No other text before or after.
+
+Response format - must be exactly this structure:
+[
+  {
+    "question": "Question text here...",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "answer": "Correct Answer Text",
+    "correctOption": "Option A"
+  }
+]`;
+      }
 
       const result = await chatSession.sendMessage(InputPrompt);
       let rawResponse = result.response.text();
 
       // Correctly closed regular expressions!
-     let cleaned = rawResponse
-  
-  .replace(/```\n?/g, "")
-  .replace(/^\n+|\n+$/g, "")
-  .trim();
+      let cleaned = rawResponse
+
+        .replace(/```\n?/g, "")
+        .replace(/^\n+|\n+$/g, "")
+        .trim();
 
 
       const match = cleaned.match(/\[\s*\{[\s\S]*\}\s*\]/);
@@ -88,6 +130,7 @@ Response format - must be exactly this structure:
         jobExperience: jobExperience,
         createdBy: userEmail,
         createdAt: moment().format("DD-MM-YYYY"),
+        interviewRound: interviewRound,
       });
 
       setOpenDialog(false);
@@ -153,8 +196,24 @@ Response format - must be exactly this structure:
                       />
                     </div>
 
+                    {/* Interview Round */}
+                    <div className="my-3">
+                      <label className="block mb-2">Interview Round</label>
+                      <select
+                        className="w-full p-2 border rounded-md transition-all hover:border-green-500 focus:border-green-600 focus:ring-2 focus:ring-green-300 bg-white"
+                        value={interviewRound}
+                        onChange={(e) => setInterviewRound(e.target.value)}
+                      >
+                        <option value="Technical Round">Technical Round</option>
+                        <option value="Managerial Round">Managerial Round</option>
+                        <option value="Aptitude & Scenario-Based Round">
+                          Aptitude & Scenario-Based Round
+                        </option>
+                      </select>
+                    </div>
+
                     {/* InterviewSelect Component */}
-                   
+
 
                     {/* Job Desc */}
                     <div className="my-3">

@@ -24,15 +24,23 @@ const Header = () => {
 
       <ul className=" hidden md:flex gap-6">
         <li>
-          <Link 
+          <Link
             href="/dashboard"
-            className={`hover:text-green-500 hover:font-bold transition-all ${isActive('/dashboard') && !path.includes('interveiw') ? 'text-green-500 font-bold' : ''}`}
+            className={`hover:text-green-500 hover:font-bold transition-all ${isActive('/dashboard') && !path.includes('interveiw') && !path.includes('performance') ? 'text-green-500 font-bold' : ''}`}
           >
             Dashboard
           </Link>
         </li>
         <li>
-          <Link 
+          <Link
+            href="/dashboard/performance"
+            className={`hover:text-green-500 hover:font-bold transition-all ${isActive('/dashboard/performance') ? 'text-green-500 font-bold' : ''}`}
+          >
+            Performance
+          </Link>
+        </li>
+        <li>
+          <Link
             href="/how-it-works"
             className={`hover:text-green-500 hover:font-bold transition-all ${isActive('/how-it-works') ? 'text-green-500 font-bold' : ''}`}
           >
@@ -40,7 +48,7 @@ const Header = () => {
           </Link>
         </li>
         <li>
-          <Link 
+          <Link
             href="/upgrade"
             className={`hover:text-green-500 hover:font-bold transition-all ${isActive('/upgrade') ? 'text-green-500 font-bold' : ''}`}
           >

@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm'
 import React, { useEffect, useState, use } from 'react'
 import QuestionsSection from './_components/QuestionsSection'
 import RecordAnswerSection from './_components/RecordAnswerSection'
+import AptitudeSection from './_components/AptitudeSection'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
@@ -32,7 +33,7 @@ function StartInterview({ params: paramsPromise }) {
         setLoading(true)
         const interviewId = params?.interveiwId
         console.log("Starting GetInterviewDetails with ID:", interviewId)
-        
+
         if (!interviewId) {
           console.error("Interview ID is missing or undefined")
           setError("Interview ID not provided in URL")
@@ -51,7 +52,7 @@ function StartInterview({ params: paramsPromise }) {
           console.log("Not found by mockId, trying alternate query...")
           const allResults = await db.select().from(MockInterview)
           console.log("All interviews in DB:", allResults)
-          
+
           // Find the one with matching mockId
           result = allResults.filter(item => item.mockId === interviewId)
           console.log("Filtered result:", result)
@@ -92,29 +93,66 @@ function StartInterview({ params: paramsPromise }) {
   }
 
   return (
-    <div>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
-        <QuestionsSection
-          mockInterviewQuestion={mockInterviewQuestion}
-          activeQuestionIndex={activeQuestionIndex}
-        />
+    <div className="min-h-screen bg-gray-50 p-4 md:p-6 flex flex-col">
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 flex-grow'>
+        {/* Left: Questions */}
+        <div className="order-2 lg:order-1">
+          <QuestionsSection
+            mockInterviewQuestion={mockInterviewQuestion}
+            activeQuestionIndex={activeQuestionIndex}
+          />
+        </div>
 
-        <RecordAnswerSection
-          mockInterviewQuestion={mockInterviewQuestion}
-          activeQuestionIndex={activeQuestionIndex}
-          interviewData={interviewData}
-        />
+        {/* Right: Camera/Answer */}
+        <div className="order-1 lg:order-2">
+          {interviewData?.interviewRound === "Aptitude & Scenario-Based Round" ? (
+            <AptitudeSection
+              mockInterviewQuestion={mockInterviewQuestion}
+              activeQuestionIndex={activeQuestionIndex}
+              interviewData={interviewData}
+            />
+          ) : (
+            <RecordAnswerSection
+              mockInterviewQuestion={mockInterviewQuestion}
+              activeQuestionIndex={activeQuestionIndex}
+              interviewData={interviewData}
+            />
+          )}
+        </div>
       </div>
-      <div className='flex justify-end gap-6'>
-        {activeQuestionIndex > 0 &&
-          <Button onClick={() => setActiveQuestionIndex(activeQuestionIndex - 1)}>Previous Question</Button>}
-        {activeQuestionIndex != mockInterviewQuestion?.length - 1 &&
-          <Button onClick={() => setActiveQuestionIndex(activeQuestionIndex + 1)}>Next Question</Button>}
-        {activeQuestionIndex == mockInterviewQuestion?.length - 1 &&
-          <Link href={'/dashboard/interveiw/' + interviewData?.mockId + "/feedback"}>
-            <Button>End Interview</Button>
-          </Link>
-        }
+
+      {/* Navigation Buttons - Sticky Bottom */}
+      <div className='sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 mt-4 shadow-lg rounded-t-2xl'>
+        <div className='flex justify-between items-center max-w-7xl mx-auto'>
+          <div className="text-sm text-gray-500">
+            Question {activeQuestionIndex + 1} of {mockInterviewQuestion?.length}
+          </div>
+
+          <div className="flex gap-4">
+            {activeQuestionIndex > 0 &&
+              <Button
+                variant="outline"
+                className="border-gray-300 text-gray-700 hover:bg-gray-100"
+                onClick={() => setActiveQuestionIndex(activeQuestionIndex - 1)}
+              >
+                ← Previous
+              </Button>}
+
+            {activeQuestionIndex != mockInterviewQuestion?.length - 1 &&
+              <Button
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+                onClick={() => setActiveQuestionIndex(activeQuestionIndex + 1)}
+              >
+                Next →
+              </Button>}
+
+            {activeQuestionIndex == mockInterviewQuestion?.length - 1 &&
+              <Link href={'/dashboard/interveiw/' + interviewData?.mockId + "/feedback"}>
+                <Button className="bg-green-600 hover:bg-green-700 text-white px-8">End Interview</Button>
+              </Link>
+            }
+          </div>
+        </div>
       </div>
     </div>
   )
