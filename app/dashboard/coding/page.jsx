@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { chatSession } from "@/utils/GeminiAIModel";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
+import BackButton from "../../_components/BackButton";
 
 function CodingInterview() {
     const router = useRouter();
@@ -96,9 +97,7 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
-                    <Button variant="outline" size="sm" onClick={() => router.push("/dashboard")}>
-                        &larr; Back
-                    </Button>
+                    <BackButton className="" />
                     <div>
                         <h2 className="font-bold text-3xl text-gray-900">Coding Interview</h2>
                         <p className="text-gray-500">Practice DSA problems with AI-powered assistance</p>
@@ -123,12 +122,12 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
                                             key={diff}
                                             onClick={() => setDifficulty(diff)}
                                             className={`p-4 rounded-xl border-2 transition-all font-semibold ${difficulty === diff
-                                                    ? diff === "Easy"
-                                                        ? "border-green-500 bg-green-50 text-green-700"
-                                                        : diff === "Medium"
-                                                            ? "border-yellow-500 bg-yellow-50 text-yellow-700"
-                                                            : "border-red-500 bg-red-50 text-red-700"
-                                                    : "border-gray-200 hover:border-gray-300 text-gray-600"
+                                                ? diff === "Easy"
+                                                    ? "border-green-500 bg-green-50 text-green-700"
+                                                    : diff === "Medium"
+                                                        ? "border-yellow-500 bg-yellow-50 text-yellow-700"
+                                                        : "border-red-500 bg-red-50 text-red-700"
+                                                : "border-gray-200 hover:border-gray-300 text-gray-600"
                                                 }`}
                                         >
                                             {diff}
@@ -148,8 +147,8 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
                                             key={t}
                                             onClick={() => setTopic(t)}
                                             className={`p-3 rounded-xl border-2 transition-all text-sm font-medium ${topic === t
-                                                    ? "border-blue-500 bg-blue-50 text-blue-700"
-                                                    : "border-gray-200 hover:border-gray-300 text-gray-600"
+                                                ? "border-blue-500 bg-blue-50 text-blue-700"
+                                                : "border-gray-200 hover:border-gray-300 text-gray-600"
                                                 }`}
                                         >
                                             {t}

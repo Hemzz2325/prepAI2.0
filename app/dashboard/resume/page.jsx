@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { chatSession } from "@/utils/GeminiAIModel";
 import { LoaderCircle, Upload } from "lucide-react";
+import BackButton from "../../_components/BackButton";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -104,9 +105,7 @@ function ResumeAnalyzer() {
         <div className="p-10 md:px-20 lg:px-32 min-h-screen bg-gray-50">
             {/* Header with Back Button */}
             <div className="flex items-center gap-4 mb-8">
-                <Button variant="outline" size="sm" onClick={() => window.history.back()}>
-                    &larr; Back
-                </Button>
+                <BackButton className="" />
                 <div>
                     <h2 className="font-bold text-3xl text-gray-900">Resume Analyzer</h2>
                     <p className="text-gray-500">AI-powered resume analysis and feedback.</p>

@@ -44,6 +44,11 @@ Job Position: ${jobPosition}
 Job Description/Tech Stack: ${jobDesc}
 Years of Experience: ${jobExperience}
 
+IMPORTANT: Adjust the difficulty of the questions based on the Years of Experience provided. 
+- If experience is low (0-2 years), ask foundational and basic questions.
+- If experience is medium (3-5 years), ask intermediate questions involving problem-solving.
+- If experience is high (5+ years), ask advanced, architectural, and complex scenario-based questions.
+
 IMPORTANT: You MUST respond with ONLY a valid JSON array. No other text before or after.
 
 Response format - must be exactly this structure:
@@ -57,6 +62,10 @@ Response format - must be exactly this structure:
 Job Position: ${jobPosition}
 Job Description/Tech Stack: ${jobDesc}
 Years of Experience: ${jobExperience}
+
+IMPORTANT: Adjust the difficulty and depth of the questions based on the Years of Experience.
+- Junior roles: Focus on basic team interaction and work ethic.
+- Senior roles: Focus on leadership, conflict resolution, and strategic thinking.
 
 IMPORTANT: You MUST respond with ONLY a valid JSON array. No other text before or after.
 
@@ -76,6 +85,8 @@ Response format - must be exactly this structure:
 
 Job Position: ${jobPosition} (For context only, do not focus on technical details)
 Years of Experience: ${jobExperience}
+
+IMPORTANT: Adjust the complexity of the scenarios based on the Years of Experience. Higher experience should face more ambiguous and complex decision-making scenarios.
 
 IMPORTANT: You MUST respond with ONLY a valid JSON array. No other text before or after.
 

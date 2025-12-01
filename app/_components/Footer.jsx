@@ -2,11 +2,18 @@
 
 import React from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Twitter, Instagram, Linkedin, Mail, ArrowRight, Heart } from 'lucide-react'
 
+
+
 function Footer() {
+    const pathname = usePathname();
+
+    if (pathname !== '/dashboard') return null;
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
