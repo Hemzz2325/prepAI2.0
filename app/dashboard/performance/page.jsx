@@ -16,6 +16,8 @@ import {
     XAxis,
     YAxis,
 } from "recharts";
+import SkillRadarChart from "../_components/SkillRadarChart";
+import ActivityHeatmap from "../_components/ActivityHeatmap";
 
 function PerformanceDashboard() {
     const { user } = useUser();
@@ -115,6 +117,17 @@ function PerformanceDashboard() {
                 </div>
             </div>
 
+            {/* Skill Analysis & Heatmap Section */}
+            {/* Skill Analysis & Heatmap Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
+                <div className="h-full">
+                    <SkillRadarChart />
+                </div>
+                <div className="h-full">
+                    <ActivityHeatmap interviewList={interviews} />
+                </div>
+            </div>
+
             {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
                 {/* Rating Trend */}
@@ -207,9 +220,9 @@ function PerformanceDashboard() {
                                             </div>
                                             <div className="text-right">
                                                 <span className={`text-lg font-bold ${avgRating === 'N/A' ? 'text-gray-400' :
-                                                        Number(avgRating) >= 4 ? 'text-green-600' :
-                                                            Number(avgRating) >= 3 ? 'text-yellow-600' :
-                                                                'text-red-600'
+                                                    Number(avgRating) >= 4 ? 'text-green-600' :
+                                                        Number(avgRating) >= 3 ? 'text-yellow-600' :
+                                                            'text-red-600'
                                                     }`}>
                                                     {avgRating}
                                                 </span>

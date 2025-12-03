@@ -37,3 +37,46 @@ export const CodingSubmission = pgTable('codingSubmission', {
     spaceComplexity: varchar('spaceComplexity'),
     createdAt: varchar('createdAt')
 });
+
+export const ResumeAnalysis = pgTable('resumeAnalysis', {
+    id: serial('id').primaryKey(),
+    userEmail: varchar('userEmail').notNull(),
+    score: varchar('score').notNull(),
+    feedback: text('feedback'),
+    createdAt: varchar('createdAt')
+});
+
+export const SavedQuestion = pgTable('savedQuestion', {
+    id: serial('id').primaryKey(),
+    userEmail: varchar('userEmail').notNull(),
+    question: text('question').notNull(),
+    answer: text('answer'),
+    tags: varchar('tags'),
+    createdAt: varchar('createdAt')
+});
+
+export const JobApplication = pgTable('jobApplication', {
+    id: serial('id').primaryKey(),
+    userEmail: varchar('userEmail').notNull(),
+    companyName: varchar('companyName').notNull(),
+    jobRole: varchar('jobRole').notNull(),
+    status: varchar('status').notNull().default('Applied'),
+    salary: varchar('salary'),
+    location: varchar('location'),
+    jobUrl: varchar('jobUrl'),
+    notes: text('notes'),
+    createdAt: varchar('createdAt'),
+    updatedAt: varchar('updatedAt')
+});
+
+export const SkillGapAnalysis = pgTable('skillGapAnalysis', {
+    id: serial('id').primaryKey(),
+    userEmail: varchar('userEmail').notNull(),
+    targetRole: varchar('targetRole').notNull(),
+    targetCompany: varchar('targetCompany'),
+    skillsHave: text('skillsHave'),
+    skillsNeeded: text('skillsNeeded'),
+    gaps: text('gaps'),
+    roadmap: text('roadmap'),
+    createdAt: varchar('createdAt')
+});

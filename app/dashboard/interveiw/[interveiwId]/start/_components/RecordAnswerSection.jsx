@@ -3,13 +3,14 @@ import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import React, { useEffect, useState, useRef } from 'react'
 import Webcam from 'react-webcam'
-import { Mic, StopCircle } from 'lucide-react'
+import { Mic, StopCircle, Bookmark, CheckCircle, Save } from 'lucide-react'
 import { toast } from 'sonner'
 import { chatSession } from '@/utils/GeminiAIModel'
 import { db } from '@/utils/db'
-import { UserAnswer } from '@/utils/schema'
+import { UserAnswer, SavedQuestion } from '@/utils/schema'
 import { useUser } from '@clerk/nextjs'
 import moment from 'moment'
+import { eq } from 'drizzle-orm'
 
 // Import speech recognition from browser API instead
 const useSpeechRecognition = () => {
@@ -84,6 +85,12 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
   const [userAnswer, setUserAnswer] = useState('')
   const { user } = useUser()
   const [loading, setLoading] = useState(false)
+  const [isSaved, setIsSaved] = useState(false)
+  const [answerSaved, setAnswerSaved] = useState(false)
+  const [speechStats, setSpeechStats] = useState({ wpm: 0, fillerCount: 0, duration: 0 })
+  const startTimeRef = useRef(null)
+  const timerRef = useRef(null)
+
   const {
     isListening,
     interimResult,
@@ -99,17 +106,85 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
     }
   }, [finalTranscript])
 
+  // Speech Analysis & Timer Logic
   useEffect(() => {
-    if (!isListening && userAnswer.length > 10) {
-      UpdateUserAnswer()
+    if (isListening) {
+      startTimeRef.current = Date.now()
+      timerRef.current = setInterval(() => {
+        const durationInSeconds = (Date.now() - startTimeRef.current) / 1000
+
+        // Analyze current answer
+        const currentText = userAnswer + interimResult
+        const words = currentText.trim().split(/\s+/)
+        const wordCount = words.length
+        const wpm = Math.round(wordCount / (durationInSeconds / 60)) || 0
+
+        const fillers = ['um', 'uh', 'like', 'you know', 'basically', 'actually', 'literally']
+        const fillerCount = words.filter(w => fillers.includes(w.toLowerCase().replace(/[^a-z]/g, ''))).length
+
+        setSpeechStats({
+          wpm,
+          fillerCount,
+          duration: Math.round(durationInSeconds)
+        })
+      }, 1000)
+    } else {
+      clearInterval(timerRef.current)
     }
-  }, [userAnswer, isListening])
+    return () => clearInterval(timerRef.current)
+  }, [isListening, userAnswer, interimResult])
+
+  // REMOVED: Auto-save useEffect
+  // useEffect(() => {
+  //   if (!isListening && userAnswer.length > 10) {
+  //     UpdateUserAnswer()
+  //   }
+  // }, [userAnswer, isListening])
+
+  // Check if question is already saved
+  useEffect(() => {
+    const checkSaved = async () => {
+      if (user && mockInterviewQuestion[activeQuestionIndex]) {
+        const result = await db.select().from(SavedQuestion)
+          .where(eq(SavedQuestion.question, mockInterviewQuestion[activeQuestionIndex].question))
+          .where(eq(SavedQuestion.userEmail, user?.primaryEmailAddress?.emailAddress))
+
+        if (result.length > 0) setIsSaved(true)
+        else setIsSaved(false)
+      }
+    }
+    checkSaved()
+    setAnswerSaved(false) // Reset answer saved state when question changes
+    setUserAnswer('') // Reset user answer
+  }, [activeQuestionIndex, user])
 
   const StartStopRecording = async () => {
     if (isListening) {
       stopListening()
     } else {
       startListening()
+    }
+  }
+
+  const handleSaveQuestion = async () => {
+    try {
+      if (isSaved) {
+        toast.info("Question already saved.")
+        return
+      }
+
+      await db.insert(SavedQuestion).values({
+        userEmail: user?.primaryEmailAddress?.emailAddress,
+        question: mockInterviewQuestion[activeQuestionIndex]?.question,
+        answer: mockInterviewQuestion[activeQuestionIndex]?.answer, // AI Answer
+        tags: interviewData?.jobPosition, // Use job position as tag
+        createdAt: moment().format('DD-MM-YYYY')
+      })
+      setIsSaved(true)
+      toast.success("Question saved to bookmarks!")
+    } catch (error) {
+      console.error("Error saving question:", error)
+      toast.error("Failed to save question.")
     }
   }
 
@@ -176,8 +251,9 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
         })
 
       if (resp) {
-        toast('User Answer recorded successfully')
-        setUserAnswer('')
+        toast.success('Answer saved successfully!')
+        setAnswerSaved(true)
+        setSpeechStats({ wpm: 0, fillerCount: 0, duration: 0 }) // Reset stats
       }
     } catch (error) {
       console.error('Error updating answer:', error)
@@ -206,9 +282,26 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
             maxHeight: '400px'
           }}
         />
+
+        {/* Speech Analysis Overlay */}
+        {isListening && (
+          <div className="absolute bottom-4 left-4 right-4 z-20 flex justify-between items-end">
+            <div className="bg-black/60 backdrop-blur-md p-3 rounded-xl text-white text-xs space-y-1 border border-white/10">
+              <div className="flex items-center gap-2">
+                <span className={`h-2 w-2 rounded-full ${speechStats.wpm > 150 ? 'bg-red-500' : speechStats.wpm < 100 ? 'bg-yellow-500' : 'bg-green-500'}`}></span>
+                <span>Pace: <strong>{speechStats.wpm} WPM</strong></span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`h-2 w-2 rounded-full ${speechStats.fillerCount > 3 ? 'bg-red-500' : 'bg-green-500'}`}></span>
+                <span>Fillers: <strong>{speechStats.fillerCount}</strong></span>
+              </div>
+              <div className="text-gray-400">Time: {speechStats.duration}s</div>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="mt-6 w-full">
+      <div className="mt-6 w-full space-y-4">
         <Button
           disabled={loading}
           className={`w-full py-6 text-base font-bold rounded-full transition-all transform hover:-translate-y-1 shadow-xl
@@ -228,9 +321,40 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
             </span>
           )}
         </Button>
-        <p className="text-center text-gray-400 mt-3 text-xs">
-          {isListening ? "Listening... Speak clearly." : "Click to start recording your answer."}
-        </p>
+
+        {/* Manual Save Button - Only show if answer exists and not listening */}
+        {!isListening && userAnswer.length > 5 && !answerSaved && (
+          <Button
+            disabled={loading}
+            className="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold shadow-md transition-all"
+            onClick={UpdateUserAnswer}
+          >
+            {loading ? 'Saving...' : <span className='flex gap-2 items-center justify-center'><Save className="h-4 w-4" /> Save Answer</span>}
+          </Button>
+        )}
+
+        {answerSaved && (
+          <div className="w-full py-3 bg-green-50 text-green-700 rounded-xl font-semibold text-center border border-green-200 flex items-center justify-center gap-2">
+            <CheckCircle className="h-5 w-5" /> Answer Saved
+          </div>
+        )}
+
+        <div className="flex justify-between items-center px-2">
+          <p className="text-gray-400 text-xs">
+            {isListening ? "Listening... Speak clearly." : "Click to start recording your answer."}
+          </p>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`text-gray-500 hover:text-blue-600 gap-1 ${isSaved ? 'text-blue-600' : ''}`}
+            onClick={handleSaveQuestion}
+            disabled={isSaved}
+          >
+            {isSaved ? <CheckCircle className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
+            {isSaved ? "Saved" : "Save Question"}
+          </Button>
+        </div>
       </div>
     </div>
   )

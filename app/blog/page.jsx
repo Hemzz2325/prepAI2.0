@@ -10,52 +10,76 @@ import BackButton from '../_components/BackButton';
 export default function BlogPage() {
     const posts = [
         {
-            title: "How to Ace Your System Design Interview",
-            excerpt: "Master the art of scalable system architecture with these 5 key principles used by top tech companies.",
-            author: "Sarah Chen",
-            date: "Nov 15, 2024",
-            category: "Technical",
-            image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            title: "How FAANG Evaluates Candidates",
+            excerpt: "The secret sauce behind Google, Meta, and Amazon's hiring process. Learn what they REALLY look for beyond your resume.",
+            author: "PrepAI Team",
+            date: "Dec 02, 2024",
+            category: "FAANG Insights",
+            image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
         },
         {
-            title: "The Future of AI in Recruitment",
-            excerpt: "Explore how artificial intelligence is transforming the hiring landscape and what it means for candidates.",
-            author: "Alex Rivera",
-            date: "Nov 10, 2024",
-            category: "Industry Trends",
-            image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-        },
-        {
-            title: "Top 10 Behavioral Interview Questions",
-            excerpt: "Prepare for the most common behavioral questions with our STAR method guide and example answers.",
-            author: "Jessica Wu",
-            date: "Nov 05, 2024",
+            title: "Top Mistakes Freshers Make in HR Rounds",
+            excerpt: "Stop sabotaging your interviews! These 7 rookie mistakes cost freshers their dream jobs. Here's how to avoid them.",
+            author: "PrepAI Team",
+            date: "Nov 30, 2024",
             category: "Interview Tips",
             image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
         },
         {
-            title: "Negotiating Your Salary Like a Pro",
-            excerpt: "Don't leave money on the table. Learn the strategies to negotiate the compensation package you deserve.",
-            author: "Michael Ross",
-            date: "Oct 28, 2024",
-            category: "Career Advice",
-            image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            title: "Project Ideas That Actually Impress Recruiters",
+            excerpt: "Forget todo apps. Build these 5 projects that make recruiters say 'When can you start?' Real-world impact guaranteed.",
+            author: "PrepAI Team",
+            date: "Nov 28, 2024",
+            category: "Projects",
+            image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
         },
         {
-            title: "Resume Mistakes to Avoid in 2024",
-            excerpt: "Is your resume getting rejected by ATS? Fix these common errors to increase your interview callback rate.",
-            author: "David Kim",
-            date: "Oct 20, 2024",
+            title: "System Design Interview Secrets",
+            excerpt: "The 3 patterns that solve 80% of system design questions. Stop memorizing, start understanding scalability.",
+            author: "PrepAI Team",
+            date: "Nov 25, 2024",
+            category: "Technical",
+            image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        },
+        {
+            title: "Resume Red Flags That Get You Rejected",
+            excerpt: "ATS systems hate these 9 things. Fix them in 10 minutes and 3x your callback rate. No fluff, just facts.",
+            author: "PrepAI Team",
+            date: "Nov 22, 2024",
             category: "Resume",
             image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
         },
         {
-            title: "Mastering the Coding Interview",
-            excerpt: "A comprehensive guide to data structures and algorithms that appear most frequently in technical interviews.",
-            author: "Emily Zhang",
-            date: "Oct 15, 2024",
+            title: "Salary Negotiation: The 48-Hour Rule",
+            excerpt: "One simple trick that got our users 20-30% higher offers. Recruiters don't want you to know this.",
+            author: "PrepAI Team",
+            date: "Nov 20, 2024",
+            category: "Career Advice",
+            image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        },
+        {
+            title: "DSA Patterns You MUST Know",
+            excerpt: "Master these 15 patterns and solve 90% of LeetCode problems. The cheat sheet senior engineers use.",
+            author: "PrepAI Team",
+            date: "Nov 18, 2024",
             category: "Technical",
-            image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        },
+        {
+            title: "Why Your LinkedIn Isn't Getting Views",
+            excerpt: "5 profile tweaks that got 10x more recruiter messages. Takes 15 minutes, lasts forever.",
+            author: "PrepAI Team",
+            date: "Nov 15, 2024",
+            category: "Career Advice",
+            image: "https://images.unsplash.com/photo-1611944212129-29977ae1398c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        },
+        {
+            title: "Behavioral Questions: The STAR Method 2.0",
+            excerpt: "The updated framework that works in 2024. Examples from real FAANG interviews included.",
+            author: "PrepAI Team",
+            date: "Nov 12, 2024",
+            category: "Interview Tips",
+            image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
         }
     ];
 

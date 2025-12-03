@@ -7,6 +7,7 @@ import { chatSession } from "@/utils/GeminiAIModel";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
 import BackButton from "../../_components/BackButton";
+import DailyWarmup from "./_components/DailyWarmup";
 
 function CodingInterview() {
     const router = useRouter();
@@ -97,12 +98,15 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
-                    <BackButton className="" />
+                    <BackButton variant="inline" className="mb-0" />
                     <div>
                         <h2 className="font-bold text-3xl text-gray-900">Coding Interview</h2>
                         <p className="text-gray-500">Practice DSA problems with AI-powered assistance</p>
                     </div>
                 </div>
+
+                {/* Daily Warmup */}
+                <DailyWarmup />
 
                 {/* Main Content */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

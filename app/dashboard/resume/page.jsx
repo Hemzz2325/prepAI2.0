@@ -4,13 +4,46 @@ import { Input } from "@/components/ui/input";
 import { chatSession } from "@/utils/GeminiAIModel";
 import { LoaderCircle, Upload } from "lucide-react";
 import BackButton from "../../_components/BackButton";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { db } from "@/utils/db";
+import { ResumeAnalysis } from "@/utils/schema";
+import { useUser } from "@clerk/nextjs";
+import { desc, eq } from "drizzle-orm";
+import moment from "moment";
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+} from "recharts";
 
 function ResumeAnalyzer() {
+    const { user } = useUser();
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [analysisResult, setAnalysisResult] = useState(null);
+    const [resumeHistory, setResumeHistory] = useState([]);
+
+    useEffect(() => {
+        user && GetResumeHistory();
+    }, [user]);
+
+    const GetResumeHistory = async () => {
+        try {
+            const result = await db
+                .select()
+                .from(ResumeAnalysis)
+                .where(eq(ResumeAnalysis.userEmail, user?.primaryEmailAddress?.emailAddress))
+                .orderBy(desc(ResumeAnalysis.createdAt));
+            setResumeHistory(result);
+        } catch (error) {
+            console.error("Error fetching history:", error);
+        }
+    };
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
@@ -88,7 +121,17 @@ function ResumeAnalyzer() {
             const jsonResponse = JSON.parse(cleanedResponse);
 
             setAnalysisResult(jsonResponse);
-            toast.success("Analysis complete!");
+
+            // Save to DB
+            await db.insert(ResumeAnalysis).values({
+                userEmail: user?.primaryEmailAddress?.emailAddress,
+                score: jsonResponse.score.toString(),
+                feedback: jsonResponse.feedback,
+                createdAt: moment().format('DD-MM-YYYY')
+            });
+
+            toast.success("Analysis complete & saved!");
+            GetResumeHistory(); // Refresh history
         } catch (error) {
             console.error("Analysis failed:", error);
             if (error.message.includes('429') || error.message.includes('Resource exhausted') || error.message.includes('rate limit')) {
@@ -101,20 +144,27 @@ function ResumeAnalyzer() {
         }
     };
 
+    // Prepare Chart Data
+    const chartData = resumeHistory.map((item, index) => ({
+        name: `Scan ${resumeHistory.length - index}`, // Reverse order for display
+        score: Number(item.score),
+        date: item.createdAt
+    })).reverse(); // Show oldest to newest left to right
+
     return (
         <div className="p-10 md:px-20 lg:px-32 min-h-screen bg-gray-50">
             {/* Header with Back Button */}
             <div className="flex items-center gap-4 mb-8">
-                <BackButton className="" />
+                <BackButton variant="inline" className="mb-0" />
                 <div>
                     <h2 className="font-bold text-3xl text-gray-900">Resume Analyzer</h2>
-                    <p className="text-gray-500">AI-powered resume analysis and feedback.</p>
+                    <p className="text-gray-500 text-sm md:text-base">AI-powered resume analysis and feedback.</p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-                {/* Left Column: Upload Section (Sticky) */}
-                <div className="lg:sticky lg:top-10 h-fit">
+                {/* Left Column: Upload Section & History */}
+                <div className="flex flex-col gap-6 lg:sticky lg:top-10 h-fit">
                     <div className={`p-8 border rounded-2xl shadow-sm bg-white flex flex-col items-center justify-center transition-all duration-300 ${analysisResult ? 'h-auto py-10' : 'h-[400px]'}`}>
                         <div className="bg-blue-50 p-6 rounded-full mb-6">
                             <Upload className="h-10 w-10 text-blue-600" />
@@ -146,6 +196,30 @@ function ResumeAnalyzer() {
                             )}
                         </Button>
                     </div>
+
+                    {/* History Chart */}
+                    {resumeHistory.length > 0 && (
+                        <div className="p-6 border rounded-2xl shadow-sm bg-white">
+                            <h3 className="font-bold text-lg mb-4 text-gray-800">Score History</h3>
+                            <div className="h-[200px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <LineChart data={chartData}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
+                                        <XAxis dataKey="name" hide />
+                                        <YAxis domain={[0, 100]} hide />
+                                        <Tooltip />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="score"
+                                            stroke="#4F46E5"
+                                            strokeWidth={2}
+                                            dot={{ r: 4 }}
+                                        />
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Right Column: Results */}

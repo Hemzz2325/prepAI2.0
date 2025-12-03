@@ -25,12 +25,13 @@ function CodingSolver() {
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [complexity, setComplexity] = useState(null);
+    const [testResults, setTestResults] = useState([]);
 
     const languages = [
-        { value: "javascript", label: "JavaScript", ext: "js" },
-        { value: "python", label: "Python", ext: "py" },
-        { value: "java", label: "Java", ext: "java" },
-        { value: "cpp", label: "C++", ext: "cpp" },
+        { value: "javascript", label: "JavaScript", ext: "js", pistonVersion: "18.15.0" },
+        { value: "python", label: "Python", ext: "py", pistonVersion: "3.10.0" },
+        { value: "java", label: "Java", ext: "java", pistonVersion: "15.0.2" },
+        { value: "cpp", label: "C++", ext: "cpp", pistonVersion: "10.2.0" },
     ];
 
     useEffect(() => {
@@ -48,43 +49,136 @@ function CodingSolver() {
         if (challenge) {
             setCode(challenge.starterCode[language] || "");
         }
-    }, [language, challenge]);
+    }, [language]);
 
     const runCode = async () => {
         setLoading(true);
         setOutput("");
+        setTestResults([]);
 
         try {
-            if (language === "javascript") {
+            const results = [];
+            const langConfig = languages.find(l => l.value === language);
+
+            for (let i = 0; i < challenge.testCases.length; i++) {
+                const testCase = challenge.testCases[i];
+
                 try {
-                    const result = eval(code);
-                    setOutput(`✅ Code executed successfully!\n\nOutput: ${JSON.stringify(result, null, 2)}`);
+                    // Prepare code with input
+                    let executableCode = code;
+
+                    // Add input handling based on language
+                    if (language === "javascript") {
+                        executableCode = `${code}\n\n// Test input\nconst input = ${JSON.stringify(testCase.input)};\nconst result = solution(input);\nconsole.log(JSON.stringify(result));`;
+                    } else if (language === "python") {
+                        executableCode = `${code}\n\n# Test input\ninput_data = ${JSON.stringify(testCase.input)}\nresult = solution(input_data)\nprint(result)`;
+                    } else if (language === "java") {
+                        executableCode = code.replace(
+                            "public static void main(String[] args)",
+                            `public static void main(String[] args) {\n        String input = ${JSON.stringify(testCase.input)};\n        System.out.println(solution(input));\n    }\n    public static String solution(String input)`
+                        );
+                    } else if (language === "cpp") {
+                        executableCode = `${code}\n\nint main() {\n    std::string input = ${JSON.stringify(testCase.input)};\n    std::cout << solution(input) << std::endl;\n    return 0;\n}`;
+                    }
+
+                    // Execute via Piston API
+                    const response = await fetch("https://emkc.org/api/v2/piston/execute", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            language: language === "cpp" ? "c++" : language,
+                            version: langConfig.pistonVersion,
+                            files: [{
+                                name: `solution.${langConfig.ext}`,
+                                content: executableCode
+                            }]
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.run && data.run.output) {
+                        const actualOutput = data.run.output.trim();
+                        const expectedOutput = String(testCase.expectedOutput).trim();
+                        const passed = actualOutput === expectedOutput;
+
+                        results.push({
+                            testCase: i + 1,
+                            input: testCase.input,
+                            expected: testCase.expectedOutput,
+                            actual: actualOutput,
+                            passed: passed,
+                            error: data.run.stderr || null
+                        });
+                    } else if (data.run && data.run.stderr) {
+                        results.push({
+                            testCase: i + 1,
+                            input: testCase.input,
+                            expected: testCase.expectedOutput,
+                            actual: null,
+                            passed: false,
+                            error: data.run.stderr
+                        });
+                    } else {
+                        throw new Error("Execution failed");
+                    }
                 } catch (error) {
-                    setOutput(`❌ Runtime Error:\n${error.message}`);
+                    results.push({
+                        testCase: i + 1,
+                        input: testCase.input,
+                        expected: testCase.expectedOutput,
+                        actual: null,
+                        passed: false,
+                        error: error.message
+                    });
                 }
+            }
+
+            setTestResults(results);
+            const passedCount = results.filter(r => r.passed).length;
+            const totalCount = results.length;
+
+            setOutput(`✅ Executed ${totalCount} test cases\n✓ Passed: ${passedCount}/${totalCount}\n${passedCount === totalCount ? '🎉 All tests passed!' : '❌ Some tests failed'}`);
+
+            if (passedCount === totalCount) {
+                toast.success("All test cases passed!");
             } else {
-                setOutput(`⚠️ Code execution for ${languages.find(l => l.value === language)?.label} is simulated.\n\nYour code looks good! Use the AI Helper to analyze complexity.`);
+                toast.error(`${totalCount - passedCount} test case(s) failed`);
             }
         } catch (error) {
-            setOutput(`Error: ${error.message}`);
+            console.error("Execution error:", error);
+            setOutput(`❌ Error: ${error.message}`);
+            toast.error("Code execution failed");
         } finally {
             setLoading(false);
         }
     };
 
     const submitSolution = async () => {
-        if (!user) {
-            toast.error("Please sign in to submit");
-            return;
-        }
-
         setSubmitting(true);
-        try {
-            const complexityPrompt = `Analyze the time and space complexity of this code:\n\n${code}\n\nReturn ONLY a JSON object: {"time": "O(...)", "space": "O(...)"}`;
-            const complexityResult = await chatSession.sendMessage(complexityPrompt);
-            const complexityText = complexityResult.response.text().replace(/```json|```/g, "").trim();
-            const complexityData = JSON.parse(complexityText);
 
+        try {
+            const prompt = `Analyze this ${language} code and provide time and space complexity in Big O notation.
+            
+Code:
+${code}
+
+Return ONLY a JSON object with this structure:
+{
+  "time": "O(...)",
+  "space": "O(...)"
+}`;
+
+            const result = await chatSession.sendMessage(prompt);
+            const responseText = result.response.text();
+            const cleanedResponse = responseText
+                .replace(/```json\n?/gi, "")
+                .replace(/```\n?/gi, "")
+                .trim();
+
+            const complexityData = JSON.parse(cleanedResponse);
             setComplexity(complexityData);
 
             await db.insert(CodingSubmission).values({
@@ -99,6 +193,26 @@ function CodingSolver() {
                 spaceComplexity: complexityData.space,
                 createdAt: moment().format("DD-MM-YYYY")
             });
+
+            // Check if this is a daily warmup
+            if (challenge.isDailyWarmup) {
+                const today = new Date().toDateString();
+                const userEmail = user.primaryEmailAddress.emailAddress;
+                const streakKey = `codingStreak_${userEmail}`;
+                const dateKey = `lastCompletedDate_${userEmail}`;
+                const dayKey = `warmupDayCount_${userEmail}`;
+
+                const currentStreak = parseInt(localStorage.getItem(streakKey) || "0");
+                const currentDay = parseInt(localStorage.getItem(dayKey) || "0");
+                const newStreak = currentStreak + 1;
+                const newDay = currentDay + 1;
+
+                localStorage.setItem(streakKey, newStreak.toString());
+                localStorage.setItem(dateKey, today);
+                localStorage.setItem(dayKey, newDay.toString());
+
+                toast.success(`🔥 ${newStreak} day streak! Day ${newDay} completed!`);
+            }
 
             setSubmitted(true);
             toast.success("Solution submitted successfully!");
@@ -117,6 +231,7 @@ function CodingSolver() {
         setOutput("");
         setAIResponse("");
         setShowAIHelper(false);
+        setTestResults([]);
 
         try {
             const prompt = `Generate a ${challenge.difficulty} level coding problem on ${challenge.topic}.
@@ -221,8 +336,8 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
                             <h2 className="font-bold text-xl text-gray-900">{challenge.title}</h2>
                             <div className="flex items-center gap-2 mt-1">
                                 <span className={`text-xs px-2 py-1 rounded-full font-semibold ${challenge.difficulty === "Easy" ? "bg-green-100 text-green-700" :
-                                        challenge.difficulty === "Medium" ? "bg-yellow-100 text-yellow-700" :
-                                            "bg-red-100 text-red-700"
+                                    challenge.difficulty === "Medium" ? "bg-yellow-100 text-yellow-700" :
+                                        "bg-red-100 text-red-700"
                                     }`}>
                                     {challenge.difficulty}
                                 </span>
@@ -282,6 +397,14 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
                                         Submit Solution
                                     </>
                                 )}
+                            </Button>
+                        ) : challenge.isDailyWarmup ? (
+                            <Button
+                                onClick={() => router.push('/dashboard/coding')}
+                                className="bg-green-600 hover:bg-green-700"
+                            >
+                                Back to Coding
+                                <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         ) : (
                             <Button
@@ -416,9 +539,48 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
 
                     <div className="h-48 bg-gray-900 text-white p-4 overflow-y-auto">
                         <h3 className="font-bold text-sm mb-2 text-gray-300">Output</h3>
-                        <pre className="text-sm font-mono whitespace-pre-wrap">
+                        <pre className="text-sm font-mono whitespace-pre-wrap mb-4">
                             {output || "Click 'Run Code' to see output..."}
                         </pre>
+
+                        {/* Test Results */}
+                        {testResults.length > 0 && (
+                            <div className="mt-4 space-y-2">
+                                <h4 className="font-bold text-sm text-gray-300 mb-2">Test Results:</h4>
+                                {testResults.map((result, idx) => (
+                                    <div
+                                        key={idx}
+                                        className={`p-2 rounded border ${result.passed
+                                            ? 'bg-green-900/30 border-green-500'
+                                            : 'bg-red-900/30 border-red-500'
+                                            }`}
+                                    >
+                                        <div className="flex items-center justify-between mb-1">
+                                            <span className="text-xs font-semibold">
+                                                Test Case {result.testCase}
+                                            </span>
+                                            <span className={`text-xs font-bold ${result.passed ? 'text-green-400' : 'text-red-400'
+                                                }`}>
+                                                {result.passed ? '✓ PASSED' : '✗ FAILED'}
+                                            </span>
+                                        </div>
+                                        <div className="text-xs space-y-1">
+                                            <div className="text-gray-400">
+                                                Input: <span className="text-white">{JSON.stringify(result.input)}</span>
+                                            </div>
+                                            <div className="text-gray-400">
+                                                Expected: <span className="text-white">{JSON.stringify(result.expected)}</span>
+                                            </div>
+                                            <div className="text-gray-400">
+                                                Got: <span className={result.passed ? 'text-green-400' : 'text-red-400'}>
+                                                    {result.error ? `Error: ${result.error}` : JSON.stringify(result.actual)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

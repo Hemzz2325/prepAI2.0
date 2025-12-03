@@ -5,13 +5,19 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function BackButton({ className = "fixed top-6 left-6" }) {
+export default function BackButton({ className = "", variant = "fixed" }) {
+    const baseStyles = "z-50 w-fit";
+    const fixedStyles = "fixed top-6 left-6";
+    const inlineStyles = "mb-6";
+
+    const containerStyles = `${baseStyles} ${variant === "fixed" ? fixedStyles : inlineStyles} ${className}`;
+
     return (
         <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
-            className={`${className} z-50 w-fit`}
+            transition={{ delay: 0.2 }}
+            className={containerStyles}
         >
             <Link
                 href="/dashboard"

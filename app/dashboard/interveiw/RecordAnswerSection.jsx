@@ -32,7 +32,7 @@ function Feedback({ params: paramsPromise }) {
 
     console.log(result)
     setFeedbackList(result)
-    
+
     // Calculate overall rating based on individual ratings
     if (result && result.length > 0) {
       const totalRating = result.reduce((sum, item) => {
@@ -40,7 +40,7 @@ function Feedback({ params: paramsPromise }) {
         const rating = parseFloat(item.rating) || 0
         return sum + rating
       }, 0)
-      
+
       const avgRating = (totalRating / result.length).toFixed(1)
       setOverallRating(avgRating)
     }
@@ -102,13 +102,13 @@ function Feedback({ params: paramsPromise }) {
                   <span className="text-2xl text-gray-400">/10</span>
                 </div>
               </div>
-              
+
               {/* Rating breakdown */}
               <div className="text-right">
                 <div className="text-sm text-gray-600">Based on {feedbackList.length} questions</div>
                 <div className="mt-2 flex gap-2 justify-end">
                   {feedbackList.map((item, index) => (
-                    <span 
+                    <span
                       key={index}
                       className={`inline-block px-2 py-1 rounded text-xs font-semibold ${getRatingBadgeColor(item.rating)}`}
                     >

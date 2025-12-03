@@ -1,63 +1,52 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
   const { user } = useUser();
   const path = usePathname();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     console.log("Current path:", path);
+    setIsMenuOpen(false); // Close menu on route change
   }, [path]);
 
   const isActive = (href) => {
     return path === href || path.startsWith(href + '/');
   };
 
+  const navLinks = [
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/dashboard/performance", label: "Performance" },
+    { href: "/how-it-works", label: "How It Works" },
+    { href: "/upgrade", label: "Upgrade" },
+  ];
+
   return (
-    <div className="flex p-4 items-center justify-between bg-secondary shadow-sm">
+    <div className="flex p-4 items-center justify-between bg-secondary shadow-sm relative z-50">
       <Link href="/dashboard">
         <Image src="/logo.svg" alt="Logo" width={60} height={80} />
       </Link>
 
-      <ul className=" hidden md:flex gap-6">
-        <li>
-          <Link
-            href="/dashboard"
-            className={`hover:text-green-500 hover:font-bold transition-all ${isActive('/dashboard') && !path.includes('interveiw') && !path.includes('performance') ? 'text-green-500 font-bold' : ''}`}
-          >
-            Dashboard
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/dashboard/performance"
-            className={`hover:text-green-500 hover:font-bold transition-all ${isActive('/dashboard/performance') ? 'text-green-500 font-bold' : ''}`}
-          >
-            Performance
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/how-it-works"
-            className={`hover:text-green-500 hover:font-bold transition-all ${isActive('/how-it-works') ? 'text-green-500 font-bold' : ''}`}
-          >
-            How It Works
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/upgrade"
-            className={`hover:text-green-500 hover:font-bold transition-all ${isActive('/upgrade') ? 'text-green-500 font-bold' : ''}`}
-          >
-            Upgrade
-          </Link>
-        </li>
+      {/* Desktop Navigation */}
+      <ul className="hidden md:flex gap-6">
+        {navLinks.map((link) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className={`hover:text-green-500 hover:font-bold transition-all ${isActive(link.href) && !path.includes('interveiw') && !path.includes('performance') ? 'text-green-500 font-bold' : ''}`}
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
         {user?.primaryEmailAddress?.emailAddress === 'nitinambiger11@gmail.com' && (
           <li>
             <Link
@@ -73,7 +62,53 @@ const Header = () => {
       <div className="flex items-center gap-4">
         <ThemeToggle />
         <UserButton />
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </div>
+
+      {/* Mobile Navigation Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 shadow-lg border-t border-gray-100 dark:border-gray-800 md:hidden p-4 flex flex-col gap-4"
+          >
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`p-3 rounded-lg transition-all ${isActive(link.href)
+                    ? 'bg-green-50 text-green-600 font-bold dark:bg-green-900/20'
+                    : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                  }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+            {user?.primaryEmailAddress?.emailAddress === 'nitinambiger11@gmail.com' && (
+              <Link
+                href="/admin"
+                className={`p-3 rounded-lg transition-all ${isActive('/admin')
+                    ? 'bg-red-50 text-red-600 font-bold dark:bg-red-900/20'
+                    : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                  }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Admin Panel
+              </Link>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
