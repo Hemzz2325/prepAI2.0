@@ -10,7 +10,7 @@
     "db:studio": " npx drizzle-kit studio"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.35.1",
+    "@clerk/nextjs": "^6.36.5",
     "@google/genai": "^1.29.1",
     "@google/generative-ai": "^0.24.1",
     "@monaco-editor/react": "^4.7.0",
