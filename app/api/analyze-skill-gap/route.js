@@ -1,18 +1,28 @@
 import { NextResponse } from "next/server";
 import { chatSession } from "@/utils/GeminiAIModel";
+import { applyRateLimit } from "@/lib/ratelimit";
+import { parseBody, skillGapSchema } from "@/lib/validators";
 
 export async function POST(req) {
-    try {
-        const { resumeText, targetRole, targetCompany } = await req.json();
+  // 1. Rate Limiting
+  const rateLimitResponse = await applyRateLimit(req);
+  if (rateLimitResponse) return rateLimitResponse;
 
-        if (!resumeText || !targetRole) {
-            return NextResponse.json(
-                { error: "Resume text and target role are required" },
-                { status: 400 }
-            );
-        }
+  try {
+    const body = await req.json();
 
-        const prompt = `
+    // 2. Zod Validation
+    const validation = parseBody(skillGapSchema, body);
+    if (validation.error) {
+      return NextResponse.json(
+        { error: "Validation failed", issues: validation.issues },
+        { status: 422 }
+      );
+    }
+
+    const { resumeText, targetRole, targetCompany } = validation.data;
+
+    const prompt = `
 You are a career advisor analyzing a resume against a target job role.
 
 **Resume:**
@@ -31,40 +41,17 @@ Analyze the resume and provide a detailed skill gap analysis in the following JS
       "skill": "Docker",
       "priority": "High",
       "reason": "Required for containerization in modern DevOps workflows"
-    },
-    ...
+    }
   ],
   "roadmap": [
     {
       "week": 1,
       "focus": "Docker Fundamentals",
-      "tasks": [
-        "Complete Docker official tutorial",
-        "Build and deploy a simple containerized app",
-        "Learn docker-compose basics"
-      ]
-    },
-    {
-      "week": 2,
-      "focus": "Advanced Docker & Kubernetes Intro",
-      "tasks": [
-        "Multi-stage Docker builds",
-        "Introduction to Kubernetes",
-        "Deploy app to Kubernetes cluster"
-      ]
-    },
-    ...
+      "tasks": ["Complete Docker official tutorial", "Build and deploy a simple containerized app"]
+    }
   ],
-  "projectSuggestions": [
-    "Build a microservices app with Docker",
-    "Create a CI/CD pipeline using Docker",
-    "Deploy a full-stack app on Kubernetes"
-  ],
-  "resumeImprovements": [
-    "Add quantifiable metrics to project descriptions",
-    "Highlight leadership experience",
-    "Include specific technologies used in each project"
-  ]
+  "projectSuggestions": ["Build a microservices app with Docker"],
+  "resumeImprovements": ["Add quantifiable metrics to project descriptions"]
 }
 
 **Instructions:**
@@ -78,28 +65,24 @@ Analyze the resume and provide a detailed skill gap analysis in the following JS
 Return ONLY valid JSON, no additional text.
 `;
 
-        const result = await chatSession.sendMessage(prompt);
-        const responseText = result.response.text();
+    const result = await chatSession.sendMessage(prompt);
+    const responseText = result.response.text();
 
-        // Clean the response to extract JSON
-        let jsonText = responseText.trim();
-        if (jsonText.startsWith("```json")) {
-            jsonText = jsonText.replace(/```json\n?/g, "").replace(/```\n?/g, "");
-        } else if (jsonText.startsWith("```")) {
-            jsonText = jsonText.replace(/```\n?/g, "");
-        }
-
-        const analysis = JSON.parse(jsonText);
-
-        return NextResponse.json({
-            success: true,
-            analysis,
-        });
-    } catch (error) {
-        console.error("Error analyzing skill gap:", error);
-        return NextResponse.json(
-            { error: "Failed to analyze skill gap. Please try again." },
-            { status: 500 }
-        );
+    let jsonText = responseText.trim();
+    if (jsonText.startsWith("```json")) {
+      jsonText = jsonText.replace(/```json\n?/g, "").replace(/```\n?/g, "");
+    } else if (jsonText.startsWith("```")) {
+      jsonText = jsonText.replace(/```\n?/g, "");
     }
+
+    const analysis = JSON.parse(jsonText);
+
+    return NextResponse.json({ success: true, analysis });
+  } catch (error) {
+    console.error("Error analyzing skill gap:", error);
+    return NextResponse.json(
+      { error: "Failed to analyze skill gap. Please try again." },
+      { status: 500 }
+    );
+  }
 }

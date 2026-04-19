@@ -18,7 +18,7 @@ export const metadata = {
 };
 
 import Footer from "./_components/Footer";
-import { ThemeProvider } from "./providers";
+import { ThemeProvider, AnalyticsProvider } from "./providers";
 
 export default function RootLayout({ children }) {
   return (
@@ -33,10 +33,12 @@ export default function RootLayout({ children }) {
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex-grow">
-              {children}
-            </div>
-            <Footer />
+            <AnalyticsProvider>
+              <div className="flex-grow">
+                {children}
+              </div>
+              <Footer />
+            </AnalyticsProvider>
           </ThemeProvider>
         </body>
       </html>

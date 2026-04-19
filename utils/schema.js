@@ -1,4 +1,5 @@
-import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, varchar, boolean, timestamp } from "drizzle-orm/pg-core";
+
 
 export const MockInterview = pgTable('mockInterview', {
     id: serial('id').primaryKey(),
@@ -79,4 +80,15 @@ export const SkillGapAnalysis = pgTable('skillGapAnalysis', {
     gaps: text('gaps'),
     roadmap: text('roadmap'),
     createdAt: varchar('createdAt')
+});
+
+export const UserSubscription = pgTable('userSubscription', {
+    id: serial('id').primaryKey(),
+    userEmail: varchar('userEmail').notNull().unique(),
+    razorpayOrderId: varchar('razorpayOrderId').unique(),
+    razorpayPaymentId: varchar('razorpayPaymentId').unique(),
+    plan: varchar('plan').notNull().default('free'), // 'free' | 'pro'
+    isLifetime: varchar('isLifetime').notNull().default('false'), // Using varchar boolean for simplicity matching other tables
+    createdAt: varchar('createdAt'),
+    updatedAt: varchar('updatedAt')
 });

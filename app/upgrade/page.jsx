@@ -2,13 +2,15 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { CheckCircle, Crown, Zap } from "lucide-react";
+import { CheckCircle, Crown, Zap, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useUser } from "@clerk/nextjs";
 import Script from "next/script";
+import { useState } from "react";
 
 export default function Upgrade() {
   const { user } = useUser();
+  const [loading, setLoading] = useState(false);
 
   const loadRazorpay = () => {
     return new Promise((resolve) => {
@@ -25,40 +27,83 @@ export default function Upgrade() {
   };
 
   const handlePayment = async () => {
-    const res = await loadRazorpay();
-
-    if (!res) {
-      alert("Razorpay SDK failed to load. Are you online?");
+    const userEmail = user?.primaryEmailAddress?.emailAddress;
+    if (!userEmail) {
+      alert("Please sign in to upgrade.");
       return;
     }
 
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_placeholder", // Enter the Key ID generated from the Dashboard
-      amount: 99900, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-      currency: "INR",
-      name: "PrepAi Pro",
-      description: "Upgrade to Pro Plan",
-      image: "/logo.svg",
-      // order_id: "order_9A33XWu170g87H", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-      handler: function (response) {
-        alert("Payment Successful: " + response.razorpay_payment_id);
-        // You can call an API here to save the payment details
-      },
-      prefill: {
-        name: user?.fullName,
-        email: user?.primaryEmailAddress?.emailAddress,
-        contact: "9999999999",
-      },
-      notes: {
-        address: "PrepAi Corporate Office",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
+    setLoading(true);
 
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
+    try {
+      const res = await loadRazorpay();
+
+      if (!res) {
+        alert("Razorpay SDK failed to load. Are you online?");
+        setLoading(false);
+        return;
+      }
+
+      // 1. Create order on server securely
+      const orderRes = await fetch("/api/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: 999 }), // 999 INR
+      });
+
+      const orderData = await orderRes.json();
+      if (!orderRes.ok) throw new Error(orderData.error);
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        currency: "INR",
+        name: "PrepAi Pro",
+        description: "Lifetime Upgrade to Pro Plan",
+        image: "/logo.svg",
+        order_id: orderData.orderId,
+        handler: async function (response) {
+          // 2. Verify payment on server
+          try {
+            const verifyRes = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                userEmail: userEmail
+              }),
+            });
+            const verifyData = await verifyRes.json();
+            
+            if (verifyRes.ok) {
+              alert("Payment Successful! You are now a PRO user.");
+              window.location.href = "/dashboard";
+            } else {
+              alert("Payment verification failed: " + verifyData.error);
+            }
+          } catch (e) {
+            alert("Error verifying payment.");
+          }
+        },
+        prefill: {
+          name: user?.fullName,
+          email: userEmail,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+
+    } catch (err) {
+      alert("Failed to start payment: " + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="min-h-screen bg-gray-50">
@@ -144,8 +189,9 @@ export default function Upgrade() {
             <Button
               className="w-full bg-blue-600 hover:bg-blue-700 text-sm py-2"
               onClick={handlePayment}
+              disabled={loading}
             >
-              Upgrade to Pro
+              {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing...</> : "Upgrade to Pro"}
             </Button>
           </div>
 
@@ -265,8 +311,9 @@ export default function Upgrade() {
           <Button
             className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3"
             onClick={handlePayment}
+            disabled={loading}
           >
-            Upgrade Now
+            {loading ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Processing...</> : "Upgrade Now"}
           </Button>
         </div>
       </div>
