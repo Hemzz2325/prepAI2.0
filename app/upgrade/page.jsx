@@ -48,7 +48,7 @@ export default function Upgrade() {
       const orderRes = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: 999 }), // 999 INR
+        body: JSON.stringify({ amount: 100 }), // 100 INR
       });
 
       const orderData = await orderRes.json();
@@ -194,34 +194,6 @@ export default function Upgrade() {
               {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing...</> : "Upgrade to Pro"}
             </Button>
           </div>
-
-          {/* Enterprise Plan */}
-          <div className="bg-white rounded-xl shadow-md p-6 border border-purple-300
-    transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-purple-400">
-            <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
-              <Crown className="text-purple-600 w-5 h-5" /> Enterprise
-            </h3>
-            <p className="text-gray-600 mb-4 text-sm">For teams and organizations</p>
-
-            <div className="text-2xl font-bold text-purple-600 mb-6">
-              Custom <span className="text-sm text-gray-600">/month</span>
-            </div>
-
-            <ul className="space-y-3 mb-6 text-sm">
-              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Everything in Pro</li>
-              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Team collaboration</li>
-              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Custom question sets</li>
-              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />Dedicated support</li>
-              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />API access</li>
-              <li className="flex gap-2"><CheckCircle className="text-purple-600 w-4 h-4" />SLA guarantee</li>
-            </ul>
-
-            <Link href="/contact">
-              <Button variant="outline" className="w-full text-sm py-2">
-                Contact Sales
-              </Button>
-            </Link>
-          </div>
         </div>
       </div>
 
@@ -243,18 +215,19 @@ export default function Upgrade() {
                   <th className="text-left py-4 px-4">Feature</th>
                   <th className="text-center py-4 px-4">Free</th>
                   <th className="text-center py-4 px-4">Pro</th>
-                  <th className="text-center py-4 px-4">Enterprise</th>
                 </tr>
               </thead>
               <tbody>
                 {[
-                  ["Interviews per month", "3", "Unlimited", "Unlimited"],
-                  ["Questions per interview", "5", "10", "Custom"],
-                  ["AI Feedback", "✓", "✓ Advanced", "✓ Custom"],
-                  ["Performance Analytics", "-", "✓", "✓"],
-                  ["Interview Templates", "-", "✓", "✓"],
-                  ["Priority Support", "-", "✓", "✓ Dedicated"],
-                ].map((row, index) => (
+                   ["Interviews per week", "3", "Unlimited"],
+                   ["Resume Analyses per week", "2", "Unlimited"],
+                   ["Coding Challenges per week", "2", "Unlimited"],
+                   ["Skill Gap Analyses per week", "2", "Unlimited"],
+                   ["Communication Sessions/week", "2", "Unlimited"],
+                   ["Job Tracker", "✓ Free", "✓ Free"],
+                   ["AI Feedback", "✓", "✓ Advanced"],
+                   ["Priority Support", "-", "✓"],
+                 ].map((row, index) => (
                   <motion.tr
                     key={index}
                     initial={{ opacity: 0, x: -30 }}
@@ -266,7 +239,6 @@ export default function Upgrade() {
                     <td className="py-4 px-4">{row[0]}</td>
                     <td className="text-center py-4 px-4">{row[1]}</td>
                     <td className="text-center py-4 px-4">{row[2]}</td>
-                    <td className="text-center py-4 px-4">{row[3]}</td>
                   </motion.tr>
                 ))}
               </tbody>

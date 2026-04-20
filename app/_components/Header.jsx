@@ -5,18 +5,28 @@ import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Moon, Sun, Menu, X } from "lucide-react";
+import { Moon, Sun, Menu, X, Crown, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
   const { user } = useUser();
   const path = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [userPlan, setUserPlan] = useState(null); // null = loading, 'free' | 'pro'
 
   useEffect(() => {
     console.log("Current path:", path);
-    setIsMenuOpen(false); // Close menu on route change
+    setIsMenuOpen(false);
   }, [path]);
+
+  useEffect(() => {
+    const email = user?.primaryEmailAddress?.emailAddress;
+    if (!email) return;
+    fetch(`/api/usage?email=${encodeURIComponent(email)}&feature=interviews`)
+      .then((r) => r.json())
+      .then((data) => setUserPlan(data.plan || "free"))
+      .catch(() => setUserPlan("free"));
+  }, [user]);
 
   const isActive = (href) => {
     return path === href || path.startsWith(href + '/');
@@ -32,7 +42,16 @@ const Header = () => {
   return (
     <div className="flex p-4 items-center justify-between bg-secondary shadow-sm relative z-50">
       <Link href="/dashboard">
-        <Image src="/logo.svg" alt="Logo" width={60} height={80} />
+        <div className="flex flex-col items-center gap-0.5">
+          <Image src="/logo.svg" alt="Logo" width={60} height={80} />
+          {userPlan === "pro" ? (
+            <span className="flex items-center gap-0.5 text-[10px] font-bold text-yellow-600 bg-yellow-50 border border-yellow-300 rounded-full px-2 py-0.5">
+              <Crown className="w-2.5 h-2.5" /> PRO
+            </span>
+          ) : userPlan === "free" ? (
+            <span className="text-[10px] text-gray-400 font-medium bg-gray-100 rounded-full px-2 py-0.5">Basic</span>
+          ) : null}
+        </div>
       </Link>
 
       {/* Desktop Navigation */}
