@@ -5,15 +5,18 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { chatSession } from "@/utils/GeminiAIModel";
 import { toast } from "sonner";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, Lock } from "lucide-react";
 import BackButton from "../../_components/BackButton";
 import DailyWarmup from "./_components/DailyWarmup";
+import { usePlan } from "@/hooks/usePlan";
+import Link from "next/link";
 
 function CodingInterview() {
     const router = useRouter();
     const [generating, setGenerating] = useState(false);
     const [difficulty, setDifficulty] = useState("");
     const [topic, setTopic] = useState("");
+    const { canUse, used, limit, consume } = usePlan("codingChallenges");
 
     const difficulties = ["Easy", "Medium", "Hard"];
     const topics = [
@@ -30,13 +33,12 @@ function CodingInterview() {
     ];
 
     const generateChallenge = async () => {
-        if (!difficulty || !topic) {
-            toast.error("Please select both difficulty and topic");
-            return;
-        }
-
+        if (!difficulty || !topic) { toast.error("Please select both difficulty and topic"); return; }
+        if (!canUse) { toast.error(`Weekly limit reached (${used}/${limit}). Upgrade to Pro!`); return; }
         setGenerating(true);
         try {
+            // Consume one slot
+            await consume();
             const prompt = `Generate a ${difficulty} level coding problem on ${topic}.
 
 Return ONLY a JSON object with this exact structure (no markdown, no code blocks):
@@ -161,21 +163,28 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
                                 </div>
                             </div>
 
-                            {/* Generate Button */}
+                            {!canUse ? (
+                                <div className="flex flex-col items-center gap-3 py-6 text-center border-2 border-dashed border-orange-200 rounded-xl bg-orange-50">
+                                    <Lock className="w-7 h-7 text-orange-500" />
+                                    <p className="font-semibold text-gray-800">Weekly Coding Limit Reached</p>
+                                    <p className="text-xs text-gray-500">{used}/{limit} free challenges used. Resets Monday.</p>
+                                    <Link href="/upgrade">
+                                        <Button className="bg-orange-500 hover:bg-orange-600 text-white">Upgrade to Pro — ₹100</Button>
+                                    </Link>
+                                </div>
+                            ) : (
                             <Button
                                 onClick={generateChallenge}
                                 disabled={generating || !difficulty || !topic}
                                 className="w-full py-6 text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                             >
                                 {generating ? (
-                                    <>
-                                        <LoaderCircle className="animate-spin mr-2" />
-                                        Generating Challenge...
-                                    </>
+                                    <><LoaderCircle className="animate-spin mr-2" />Generating Challenge...</>
                                 ) : (
-                                    "Generate Challenge"
+                                    `Generate Challenge (${used}/${limit} used this week)`
                                 )}
                             </Button>
+                            )}
                         </div>
                     </div>
 

@@ -4,16 +4,19 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { chatSession } from "@/utils/GeminiAIModel";
 import { toast } from "sonner";
-import { LoaderCircle, CheckCircle, Sparkles, Briefcase, Mic, Volume2, StopCircle, GraduationCap } from "lucide-react";
+import { LoaderCircle, CheckCircle, Sparkles, Briefcase, Mic, Volume2, StopCircle, GraduationCap, Lock } from "lucide-react";
 import BackButton from "../../_components/BackButton";
 import { useSpeech } from "./_hooks/useSpeech";
 import Assessment from "./_components/Assessment";
+import { usePlan } from "@/hooks/usePlan";
+import Link from "next/link";
 
 function CommunicationTrainer() {
-    const [activeTab, setActiveTab] = useState("practice"); // practice, assessment
-    const [mode, setMode] = useState("grammar"); // grammar, rephrase, manager
+    const [activeTab, setActiveTab] = useState("practice");
+    const [mode, setMode] = useState("grammar");
     const [outputText, setOutputText] = useState(null);
     const [loading, setLoading] = useState(false);
+    const { canUse, used, limit, consume } = usePlan("communicationSessions");
 
     const {
         isListening,
@@ -50,14 +53,12 @@ function CommunicationTrainer() {
     const currentMode = modes.find(m => m.id === mode);
 
     const processSpeech = async () => {
-        if (!transcript.trim()) {
-            toast.error("Please speak something first");
-            return;
-        }
-
+        if (!transcript.trim()) { toast.error("Please speak something first"); return; }
+        if (!canUse) { toast.error(`Weekly limit reached (${used}/${limit}). Upgrade to Pro!`); return; }
         setLoading(true);
         setOutputText(null);
-
+        // consume one slot
+        await consume();
         try {
             const baseInstruction = `
             Analyze the following spoken text. 
@@ -209,18 +210,17 @@ function CommunicationTrainer() {
                                 </div>
 
                                 {transcript && !isListening && (
-                                    <Button
-                                        onClick={processSpeech}
-                                        className="mt-6 w-full max-w-xs"
-                                        disabled={loading}
-                                    >
-                                        {loading ? (
-                                            <LoaderCircle className="animate-spin mr-2" />
-                                        ) : (
-                                            <Sparkles className="mr-2" />
-                                        )}
-                                        Analyze Speech
+                                    !canUse ? (
+                                        <div className="mt-6 flex flex-col items-center gap-2 text-center">
+                                            <Lock className="w-5 h-5 text-orange-500" />
+                                            <p className="text-sm text-gray-600">Weekly limit reached ({used}/{limit}). <Link href="/upgrade" className="text-orange-500 underline font-semibold">Upgrade to Pro</Link></p>
+                                        </div>
+                                    ) : (
+                                    <Button onClick={processSpeech} className="mt-6 w-full max-w-xs" disabled={loading}>
+                                        {loading ? (<LoaderCircle className="animate-spin mr-2" />) : (<Sparkles className="mr-2" />)}
+                                        Analyze Speech ({used}/{limit} used)
                                     </Button>
+                                    )
                                 )}
                             </div>
 

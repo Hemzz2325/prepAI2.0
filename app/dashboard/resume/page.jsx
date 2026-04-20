@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { chatSession } from "@/utils/GeminiAIModel";
-import { LoaderCircle, Upload } from "lucide-react";
+import { LoaderCircle, Upload, Lock } from "lucide-react";
 import BackButton from "../../_components/BackButton";
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -11,14 +11,10 @@ import { ResumeAnalysis } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { desc, eq } from "drizzle-orm";
 import moment from "moment";
+import { usePlan } from "@/hooks/usePlan";
+import Link from "next/link";
 import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
+    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 
 function ResumeAnalyzer() {
@@ -27,6 +23,7 @@ function ResumeAnalyzer() {
     const [loading, setLoading] = useState(false);
     const [analysisResult, setAnalysisResult] = useState(null);
     const [resumeHistory, setResumeHistory] = useState([]);
+    const { canUse, used, limit, consume } = usePlan("resumeAnalyses");
 
     useEffect(() => {
         user && GetResumeHistory();
@@ -70,11 +67,8 @@ function ResumeAnalyzer() {
     };
 
     const onAnalyze = async () => {
-        if (!file) {
-            toast.error("Please upload a resume first.");
-            return;
-        }
-
+        if (!file) { toast.error("Please upload a resume first."); return; }
+        if (!canUse) { toast.error(`Weekly limit reached (${used}/${limit}). Upgrade to Pro!`); return; }
         setLoading(true);
         try {
             const imagePart = await fileToGenerativePart(file);
@@ -122,7 +116,8 @@ function ResumeAnalyzer() {
 
             setAnalysisResult(jsonResponse);
 
-            // Save to DB
+            // Save to DB + consume one slot
+            await consume();
             await db.insert(ResumeAnalysis).values({
                 userEmail: user?.primaryEmailAddress?.emailAddress,
                 score: jsonResponse.score.toString(),
@@ -181,20 +176,28 @@ function ResumeAnalyzer() {
                             className="max-w-xs mb-4"
                         />
 
+                        {!canUse ? (
+                            <div className="flex flex-col items-center gap-3 py-8 text-center">
+                                <div className="p-3 rounded-full bg-orange-100">
+                                    <Lock className="w-6 h-6 text-orange-500" />
+                                </div>
+                                <p className="font-semibold text-gray-800">Weekly Limit Reached</p>
+                                <p className="text-xs text-gray-500">{used}/{limit} free analyses used. Resets Monday.</p>
+                                <Link href="/upgrade">
+                                    <Button className="bg-orange-500 hover:bg-orange-600 text-white text-sm">
+                                        Upgrade to Pro — ₹100
+                                    </Button>
+                                </Link>
+                            </div>
+                        ) : (
                         <Button
                             className="w-full max-w-xs bg-blue-600 hover:bg-blue-700 text-white"
                             onClick={onAnalyze}
                             disabled={loading || !file}
                         >
-                            {loading ? (
-                                <>
-                                    <LoaderCircle className="animate-spin mr-2" />
-                                    Analyzing...
-                                </>
-                            ) : (
-                                "Analyze Resume"
-                            )}
+                            {loading ? (<><LoaderCircle className="animate-spin mr-2" />Analyzing...</>) : `Analyze Resume (${used}/${limit} used)`}
                         </Button>
+                        )}
                     </div>
 
                     {/* History Chart */}

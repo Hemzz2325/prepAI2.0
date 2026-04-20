@@ -5,17 +5,19 @@ import { SkillGapAnalysis } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq, desc } from "drizzle-orm";
 import { motion } from "framer-motion";
-import { Brain, Upload, Sparkles } from "lucide-react";
+import { Brain } from "lucide-react";
 import BackButton from "@/app/_components/BackButton";
 import AnalyzerForm from "./_components/AnalyzerForm";
 import GapResults from "./_components/GapResults";
 import AnalysisHistory from "./_components/AnalysisHistory";
+import { usePlan } from "@/hooks/usePlan";
 
 function SkillGapPage() {
     const { user } = useUser();
     const [currentAnalysis, setCurrentAnalysis] = useState(null);
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(false);
+    const { canUse, used, limit, consume } = usePlan("skillGapAnalyses");
 
     useEffect(() => {
         if (user) fetchHistory();
@@ -67,6 +69,10 @@ function SkillGapPage() {
                         onAnalysisComplete={handleAnalysisComplete}
                         loading={loading}
                         setLoading={setLoading}
+                        canUse={canUse}
+                        used={used}
+                        limit={limit}
+                        consume={consume}
                     />
 
                     {/* Results */}
