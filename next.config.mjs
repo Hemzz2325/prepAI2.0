@@ -25,6 +25,4 @@ export default withSentryConfig(nextConfig, {
   silent: true, // Suppress Sentry CLI logs during build
   widenClientFileUpload: true,
   hideSourceMaps: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
 });

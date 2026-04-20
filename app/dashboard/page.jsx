@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "@/utils/db";
 import { MockInterview } from "@/utils/schema";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
 import Addinterveiw from "../_components/Addinterveiw";
 import { useRouter } from "next/navigation";
@@ -35,14 +35,15 @@ const Dashboard = () => {
     try {
       setLoading(true);
       const email = user?.primaryEmailAddress?.emailAddress;
+      if (!email) return;
 
       const res = await db
         .select()
         .from(MockInterview)
-        .orderBy(desc(MockInterview.createdAt));
+        .where(eq(MockInterview.createdBy, email))
+        .orderBy(desc(MockInterview.id)); // id is numeric, safe to sort desc
 
-      const filtered = res.filter((i) => i.createdBy === email);
-      setInterviewList(filtered);
+      setInterviewList(res);
     } catch (e) {
       console.error("fetch err:", e);
     } finally {

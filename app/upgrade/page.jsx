@@ -174,7 +174,7 @@ export default function Upgrade() {
             <p className="text-gray-600 mb-4 text-sm">For serious job seekers</p>
 
             <div className="text-2xl font-bold text-blue-600 mb-6">
-              $9.99 <span className="text-sm text-gray-600">/month</span>
+              ₹100 <span className="text-sm text-gray-600">one-time / lifetime</span>
             </div>
 
             <ul className="space-y-3 mb-6 text-sm">

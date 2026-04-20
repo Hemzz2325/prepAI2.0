@@ -1,4 +1,4 @@
-import { pgTable, serial, text, varchar, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, varchar, integer } from "drizzle-orm/pg-core";
 
 
 export const MockInterview = pgTable('mockInterview', {
@@ -88,7 +88,18 @@ export const UserSubscription = pgTable('userSubscription', {
     razorpayOrderId: varchar('razorpayOrderId').unique(),
     razorpayPaymentId: varchar('razorpayPaymentId').unique(),
     plan: varchar('plan').notNull().default('free'), // 'free' | 'pro'
-    isLifetime: varchar('isLifetime').notNull().default('false'), // Using varchar boolean for simplicity matching other tables
+    isLifetime: varchar('isLifetime').notNull().default('false'),
+    createdAt: varchar('createdAt'),
+    updatedAt: varchar('updatedAt')
+});
+
+// Tracks weekly usage per user per feature
+export const UserUsage = pgTable('userUsage', {
+    id: serial('id').primaryKey(),
+    userEmail: varchar('userEmail').notNull(),
+    feature: varchar('feature').notNull(), // e.g. 'interviews', 'resumeAnalyses'
+    weekKey: varchar('weekKey').notNull(), // e.g. '2025-W16' (ISO week)
+    count: integer('count').notNull().default(0),
     createdAt: varchar('createdAt'),
     updatedAt: varchar('updatedAt')
 });
