@@ -153,25 +153,8 @@ export default function Home() {
           </SignUpButton>
         </motion.div>
 
-        {/* Social Proof / Trust */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 1 }}
-          className="mt-12 pt-8 border-t border-gray-100 flex flex-col items-center gap-3"
-        >
-          <div className="flex -space-x-2">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-500">
-                {String.fromCharCode(64 + i)}
-              </div>
-            ))}
-            <div className="w-8 h-8 rounded-full bg-green-100 border-2 border-white flex items-center justify-center text-xs font-bold text-green-700">
-              +1k
-            </div>
-          </div>
-          <p className="text-sm text-gray-500">Join thousands of job seekers preparing today.</p>
-        </motion.div>
+
+
 
       </motion.div>
     </div>
