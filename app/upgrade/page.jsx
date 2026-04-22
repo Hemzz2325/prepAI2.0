@@ -133,8 +133,8 @@ export default function Upgrade() {
       </div>
 
       {/* Pricing Plans */}
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="max-w-3xl mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
           {/* Free Plan */}
           <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200 
@@ -143,14 +143,15 @@ export default function Upgrade() {
             <p className="text-gray-600 mb-4 text-sm">Perfect for getting started</p>
 
             <div className="text-2xl font-bold text-green-600 mb-6">
-              $0 <span className="text-sm text-gray-600">/month</span>
+              ₹0 <span className="text-sm text-gray-600">forever</span>
             </div>
 
             <ul className="space-y-3 mb-6 text-sm">
-              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />3 interviews per month</li>
-              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />5 questions per interview</li>
-              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />Basic AI feedback</li>
-              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />Privacy protected</li>
+              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />3 interviews / week</li>
+              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />2 resume analyses / week</li>
+              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />2 coding challenges / week</li>
+              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />2 skill gap analyses / week</li>
+              <li className="flex gap-2"><CheckCircle className="text-green-600 w-4 h-4" />Job tracker — unlimited</li>
             </ul>
 
             <Link href="/dashboard">
@@ -178,11 +179,11 @@ export default function Upgrade() {
             </div>
 
             <ul className="space-y-3 mb-6 text-sm">
-              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Unlimited interviews</li>
-              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />10 questions per interview</li>
-              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Advanced AI feedback</li>
-              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Performance analytics</li>
-              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Interview templates</li>
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Unlimited interviews / week</li>
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Unlimited resume analyses</li>
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Unlimited coding challenges</li>
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Unlimited skill gap analyses</li>
+              <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Unlimited communication sessions</li>
               <li className="flex gap-2"><CheckCircle className="text-blue-600 w-4 h-4" />Priority support</li>
             </ul>
 
