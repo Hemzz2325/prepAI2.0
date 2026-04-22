@@ -33,69 +33,97 @@ function Addinterveiw() {
   const { user } = useUser();
   const { canUse, used, limit, loading: planLoading, consume } = usePlan("interviews");
 
+  // Plan-based question count: pro plan gets 15, free gets 10
+  const questionCount = (canUse !== undefined && limit >= 999) ? 15 : 10;
+  // canUse comes from usePlan which exposes plan info; check via limit (unlimited = pro)
+  // Safer: use a state variable fetched from /api/usage
+  const techCount = questionCount - 3; // reserve 3 slots for coding questions
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       let InputPrompt = "";
 
+      // Fetch actual plan to determine question count
+      let isPro = false;
+      try {
+        const email = user?.primaryEmailAddress?.emailAddress;
+        const planRes = await fetch(`/api/usage?email=${encodeURIComponent(email)}&feature=interviews`);
+        const planData = await planRes.json();
+        isPro = planData?.plan === "pro";
+      } catch (_) {}
+      const totalQ = isPro ? 15 : 10;
+      const mainQ = totalQ - 3; // 3 slots for code questions
+
       if (interviewRound === "Technical Round") {
-        InputPrompt = `Generate exactly 5 technical interview questions and answers for the following position.
-        
+        InputPrompt = `Generate a technical interview with EXACTLY ${totalQ} questions for the role below.
+
 Job Position: ${jobPosition}
-Job Description/Tech Stack: ${jobDesc}
+Tech Stack / Job Description: ${jobDesc}
 Years of Experience: ${jobExperience}
 
-IMPORTANT: Adjust the difficulty of the questions based on the Years of Experience provided. 
-- If experience is low (0-2 years), ask foundational and basic questions.
-- If experience is medium (3-5 years), ask intermediate questions involving problem-solving.
-- If experience is high (5+ years), ask advanced, architectural, and complex scenario-based questions.
+RULES:
+- First ${mainQ} questions: pure technical/conceptual questions on the given tech stack.
+  - 0-2 yrs experience: foundational & basic concept questions.
+  - 3-5 yrs: intermediate, problem-solving, design patterns.
+  - 5+ yrs: advanced, system design, architecture, trade-offs.
+- Last 3 questions: short coding questions. Use these types ONLY:
+  1. "Predict the Output" — show a ${jobDesc.split(',')[0] || 'code'} snippet and ask what it prints/returns.
+  2. "Write a Function" — ask to write a small utility function (10-15 lines max).
+  3. "Fix the Bug" — show broken code and ask what is wrong.
+  For coding questions, the "answer" field must contain the correct output/solution WITH a brief explanation.
 
-IMPORTANT: You MUST respond with ONLY a valid JSON array. No other text before or after.
-
-Response format - must be exactly this structure:
+IMPORTANT: Return ONLY a valid JSON array. No markdown, no extra text.
 [
-  {"question": "What is...?", "answer": "The answer is..."},
-  {"question": "How do...?", "answer": "You should..."}
+  {"question": "Question text?", "answer": "Answer text."},
+  ...
 ]`;
+
       } else if (interviewRound === "Managerial Round") {
-        InputPrompt = `Generate exactly 5 managerial and behavioral interview questions and answers for the following position. Focus on leadership, conflict resolution, and soft skills.
+        InputPrompt = `Generate a managerial interview with EXACTLY ${totalQ} questions for the role below.
 
 Job Position: ${jobPosition}
-Job Description/Tech Stack: ${jobDesc}
 Years of Experience: ${jobExperience}
 
-IMPORTANT: Adjust the difficulty and depth of the questions based on the Years of Experience.
-- Junior roles: Focus on basic team interaction and work ethic.
-- Senior roles: Focus on leadership, conflict resolution, and strategic thinking.
+THIS IS A BEHAVIORAL/LEADERSHIP ROUND. DO NOT ask technical or coding questions.
+Focus ONLY on:
+- Leadership & people management (how they lead/motivate teams)
+- Conflict resolution (handling disagreements, difficult colleagues)
+- Problem-solving mindset (how they approach ambiguous problems)
+- Behavioral traits (use STAR method scenarios — Situation, Task, Action, Result)
+- Cultural fit & values (collaboration, ownership, growth mindset)
+- Communication & stakeholder management
 
-IMPORTANT: You MUST respond with ONLY a valid JSON array. No other text before or after.
+Question volume breakdown for ${totalQ} questions:
+- 3 questions: leadership & team management scenarios
+- 3 questions: conflict resolution & handling pressure
+- 2 questions: behavioral (STAR format — "Tell me about a time when...")
+- 2 questions: cultural fit & values (teamwork, ownership, learning)
+${isPro ? '- 3 questions: strategic thinking, product decisions, stakeholder alignment, cross-team influence\n- 2 questions: mentoring, delegation, and driving results' : '- 2 questions: initiative & ownership examples'}
 
-Response format - must be exactly this structure:
+IMPORTANT: Return ONLY a valid JSON array. No markdown, no extra text.
 [
-  {"question": "What is...?", "answer": "The answer is..."},
-  {"question": "How do...?", "answer": "You should..."}
+  {"question": "Tell me about a time when...", "answer": "A strong answer would include..."},
+  ...
 ]`;
-      } else if (interviewRound === "Aptitude & Scenario-Based Round") {
-        InputPrompt = `Generate exactly 5 general aptitude, logical reasoning, and scenario-based questions. 
-        
-        IMPORTANT: 
-        - Do NOT ask technical coding questions. 
-        - Focus on quantitative aptitude, logical reasoning, and general workplace scenarios (e.g., time management, ethics).
-        - The questions should be suitable for a professional with ${jobExperience} years of experience, but NOT specific to the tech stack.
-        - Provide 4 options for each question.
 
-Job Position: ${jobPosition} (For context only, do not focus on technical details)
+      } else if (interviewRound === "Aptitude & Scenario-Based Round") {
+        InputPrompt = `Generate EXACTLY ${totalQ} aptitude and scenario-based questions.
+
+Job Position: ${jobPosition} (context only — do NOT focus on tech)
 Years of Experience: ${jobExperience}
 
-IMPORTANT: Adjust the complexity of the scenarios based on the Years of Experience. Higher experience should face more ambiguous and complex decision-making scenarios.
+RULES:
+- Do NOT ask coding or technical questions.
+- Focus on: quantitative aptitude, logical reasoning, workplace ethics, time management, data interpretation.
+- Provide 4 options (A, B, C, D) for each question.
+- Difficulty scales with experience: higher exp = more ambiguous, multi-step scenarios.
 
-IMPORTANT: You MUST respond with ONLY a valid JSON array. No other text before or after.
-
-Response format - must be exactly this structure:
+IMPORTANT: Return ONLY a valid JSON array. No markdown, no extra text.
 [
   {
-    "question": "Question text here...",
+    "question": "Question text...",
     "options": ["Option A", "Option B", "Option C", "Option D"],
     "answer": "Correct Answer Text",
     "correctOption": "Option A"

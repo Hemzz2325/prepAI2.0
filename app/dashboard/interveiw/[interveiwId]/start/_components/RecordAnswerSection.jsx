@@ -189,83 +189,87 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
   }
 
   const UpdateUserAnswer = async () => {
-    console.log(userAnswer)
-    setLoading(true)
+    if (!userAnswer || userAnswer.trim().length < 5) {
+      toast.error('Please record a longer answer before saving.');
+      return;
+    }
+
+    setLoading(true);
+    const question = mockInterviewQuestion[activeQuestionIndex]?.question;
+    const correctAns = mockInterviewQuestion[activeQuestionIndex]?.answer;
+    const userEmail = user?.primaryEmailAddress?.emailAddress;
+    const today = moment().format('DD-MM-YYYY');
+
     try {
-      const feedbackPrompt = "Question:" + mockInterviewQuestion[activeQuestionIndex]?.question +
-        ", User Answer:" + userAnswer + ",Depends on question and user answer for give interview question " +
-        " please give us rating for answer and feedback as area of improvement if any " +
-        "in just 3 to 5 lines to improve it in JSON format with rating field and feedback field"
+      // ── STEP 1: Save answer to DB immediately (no AI wait) ──────────────────
+      await db.insert(UserAnswer).values({
+        mockIdRef: interviewData?.mockId,
+        question,
+        correctAns,
+        userAns: userAnswer,
+        feedback: 'Generating feedback…',
+        rating: '0',
+        userEmail,
+        createdAt: today,
+      });
 
-      // Retry logic with exponential backoff
-      let retries = 3
-      let delay = 1000 // Start with 1 second
-      let result = null
+      toast.success('Answer saved! Generating AI feedback in background…');
+      setAnswerSaved(true);
+      setSpeechStats({ wpm: 0, fillerCount: 0, duration: 0 });
+      setLoading(false);
 
-      for (let i = 0; i < retries; i++) {
+      // ── STEP 2: Run AI feedback async in background ────────────────────────
+      (async () => {
         try {
-          result = await chatSession.sendMessage(feedbackPrompt)
-          break // Success, exit retry loop
-        } catch (error) {
-          if (error.message.includes('429') || error.message.includes('Resource exhausted')) {
-            if (i < retries - 1) {
-              console.log(`Rate limit hit, retrying in ${delay}ms...`)
-              await new Promise(resolve => setTimeout(resolve, delay))
-              delay *= 2 // Exponential backoff
-            } else {
-              throw new Error('API rate limit exceeded. Please wait a moment before recording another answer.')
+          const feedbackPrompt =
+            `Question: ${question}\nUser Answer: ${userAnswer}\n` +
+            `Give a rating (1-10) and 3-5 lines of feedback as a JSON object with "rating" and "feedback" fields. ` +
+            `No markdown, just raw JSON.`;
+
+          let retries = 3, delay = 1000, result = null;
+          for (let i = 0; i < retries; i++) {
+            try {
+              result = await chatSession.sendMessage(feedbackPrompt);
+              break;
+            } catch (err) {
+              if ((err.message.includes('429') || err.message.includes('exhausted')) && i < retries - 1) {
+                await new Promise(r => setTimeout(r, delay));
+                delay *= 2;
+              } else throw err;
             }
-          } else {
-            throw error // Re-throw non-rate-limit errors
           }
+
+          let raw = result.response.text()
+            .replace(/```json\n?/gi, '').replace(/```\n?/gi, '').trim();
+          const jsonMatch = raw.match(/\{[\s\S]*\}/);
+          if (jsonMatch) raw = jsonMatch[0];
+          const fb = JSON.parse(raw);
+
+          // Update the row we just inserted
+          const { eq, and } = await import('drizzle-orm');
+          await db.update(UserAnswer)
+            .set({ feedback: fb?.feedback, rating: String(fb?.rating) })
+            .where(
+              and(
+                eq(UserAnswer.mockIdRef, interviewData?.mockId),
+                eq(UserAnswer.question, question),
+                eq(UserAnswer.userEmail, userEmail)
+              )
+            );
+          toast.success('AI feedback ready! Check your results at the end.');
+        } catch (bgErr) {
+          console.error('Background AI feedback failed:', bgErr);
+          // Non-blocking — answer is already saved; feedback just stays as placeholder
         }
-      }
+      })();
 
-      let mockJsonResp = result.response.text()
-      // Remove markdown code blocks
-      mockJsonResp = mockJsonResp
-        .replace(/```json\n?/gi, '')
-        .replace(/```\n?/gi, '')
-        .replace(/^\n+|\n+$/g, '')
-        .trim()
-
-      // Extract JSON object if needed
-      const jsonMatch = mockJsonResp.match(/\{[\s\S]*\}/)
-      if (jsonMatch) {
-        mockJsonResp = jsonMatch[0]
-      }
-
-      console.log('Cleaned JSON:', mockJsonResp)
-      const JsonFeedbackResp = JSON.parse(mockJsonResp)
-
-      const resp = await db.insert(UserAnswer)
-        .values({
-          mockIdRef: interviewData?.mockId,
-          question: mockInterviewQuestion[activeQuestionIndex]?.question,
-          correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
-          userAns: userAnswer,
-          feedback: JsonFeedbackResp?.feedback,
-          rating: JsonFeedbackResp?.rating,
-          userEmail: user?.primaryEmailAddress?.emailAddress,
-          createdAt: moment().format('DD-MM-yyyy')
-        })
-
-      if (resp) {
-        toast.success('Answer saved successfully!')
-        setAnswerSaved(true)
-        setSpeechStats({ wpm: 0, fillerCount: 0, duration: 0 }) // Reset stats
-      }
     } catch (error) {
-      console.error('Error updating answer:', error)
-      if (error.message.includes('429') || error.message.includes('Resource exhausted')) {
-        toast.error('API rate limit reached. Please wait 10-15 seconds before recording another answer.')
-      } else {
-        toast.error('Error saving answer: ' + error.message)
-      }
-    } finally {
-      setLoading(false)
+      console.error('Error saving answer:', error);
+      toast.error('Error saving answer: ' + error.message);
+      setLoading(false);
     }
   }
+
 
   return (
     <div className='flex items-center justify-center flex-col h-full max-h-[calc(100vh-200px)]'>
