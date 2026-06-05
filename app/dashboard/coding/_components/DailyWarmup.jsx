@@ -153,51 +153,51 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
         >
             <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-3 bg-orange-100 rounded-xl">
+                    <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-xl">
                         <Flame className="w-6 h-6 text-orange-600" />
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900">Daily 5-Min Warmup</h3>
-                        <p className="text-sm text-gray-600">Quick problem to keep your skills sharp</p>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">Daily 5-Min Warmup</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Quick problem to keep your skills sharp</p>
                     </div>
                 </div>
 
                 {/* Streak Counter */}
-                <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-orange-200">
+                <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 rounded-xl border border-orange-200">
                     <Trophy className="w-5 h-5 text-orange-600" />
                     <div className="text-center">
                         <p className="text-2xl font-bold text-orange-600">{streak}</p>
-                        <p className="text-xs text-gray-500">day streak</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">day streak</p>
                     </div>
                 </div>
             </div>
 
             {/* Daily Problem Info */}
-            <div className="bg-white rounded-xl p-4 mb-4 border border-orange-100">
+            <div className="bg-white dark:bg-gray-900 rounded-xl p-4 mb-4 border border-orange-100">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-bold text-gray-900">Today's Challenge</h4>
+                    <h4 className="font-bold text-gray-900 dark:text-white">Today's Challenge</h4>
                     <div className="flex items-center gap-2">
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getDifficulty(currentDay) === "Easy"
-                            ? "bg-green-100 text-green-700"
+                            ? "bg-green-100 dark:bg-green-900/30 text-green-700"
                             : getDifficulty(currentDay) === "Medium"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : "bg-red-100 text-red-700"
+                                ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700"
+                                : "bg-red-100 dark:bg-red-900/30 text-red-700"
                             }`}>
                             {getDifficulty(currentDay)}
                         </span>
-                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700">
                             {getTopic(currentDay)}
                         </span>
                     </div>
                 </div>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                     Day {currentDay + 1} • Difficulty increases every 7 days
                 </p>
             </div>
 
             {/* Action Button */}
             {todayCompleted ? (
-                <div className="flex items-center justify-center gap-2 py-3 bg-green-50 rounded-xl border border-green-200">
+                <div className="flex items-center justify-center gap-2 py-3 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200">
                     <Trophy className="w-5 h-5 text-green-600" />
                     <span className="font-semibold text-green-700">Completed Today! 🎉 Come back tomorrow!</span>
                 </div>

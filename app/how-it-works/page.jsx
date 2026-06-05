@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,7 +13,7 @@ export default function HowItWorks() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/">
-            <Image src="/logo.svg" alt="PrepAi Logo" width={60} height={80} />
+            <Image src="/logo.svg" alt="Placify AI Logo" width={60} height={80} />
           </Link>
 
           <motion.div 
@@ -46,7 +46,7 @@ export default function HowItWorks() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            How PrepAi Works
+            How Placify AI Works
           </motion.h1>
 
           <motion.p
@@ -65,26 +65,64 @@ export default function HowItWorks() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
           {[
-            { icon: Brain, title: "1. Create Interview", text: "Select a job position, describe the tech stack..." , color: "green"},
-            { icon: Mic, title: "2. Record Your Answers", text: "Enable your webcam and microphone...", color: "blue"},
-            { icon: Zap, title: "3. AI Evaluation", text: "Our AI analyzes your answer...", color: "purple"},
-            { icon: BarChart3, title: "4. Get Feedback Report", text: "Review detailed feedback...", color: "yellow"},
-            { icon: CheckCircle, title: "5. Retake & Improve", text: "Practice again and track improvements...", color: "red"},
-            { icon: Award, title: "6. Ace Your Interview", text: "Boost your confidence and skills...", color: "green"},
+            {
+              icon: Brain,
+              title: "1. Create Interview",
+              text: "Select your target job position, enter the required tech stack, and specify your years of experience. Our AI will automatically generate a custom set of relevant technical and behavioral questions.",
+              bgClass: "bg-emerald-50 dark:bg-emerald-950/30",
+              textClass: "text-emerald-600 dark:text-emerald-400",
+            },
+            {
+              icon: Mic,
+              title: "2. Record Your Answers",
+              text: "Provide webcam and microphone access to simulate a real-world video call environment. Answer each question dynamically and submit your response whenever you are ready.",
+              bgClass: "bg-blue-50 dark:bg-blue-950/30",
+              textClass: "text-blue-600 dark:text-blue-400",
+            },
+            {
+              icon: Zap,
+              title: "3. AI Evaluation",
+              text: "Our advanced AI processing pipeline analyzes your speech, clarity, tone, and technical accuracy. It evaluates your inputs against industry-standard rubrics and sample responses.",
+              bgClass: "bg-purple-50 dark:bg-purple-950/30",
+              textClass: "text-purple-600 dark:text-purple-400",
+            },
+            {
+              icon: BarChart3,
+              title: "4. Get Feedback Report",
+              text: "Access a comprehensive dashboard highlighting your strong areas and spelling out key areas of improvement. You'll receive a detailed percentage score and actionable advice.",
+              bgClass: "bg-amber-50 dark:bg-amber-950/30",
+              textClass: "text-amber-600 dark:text-amber-400",
+            },
+            {
+              icon: CheckCircle,
+              title: "5. Retake & Improve",
+              text: "Go back and re-answer the questions where your score was low to lock in the correct concepts. Watch your performance statistics improve attempt over attempt.",
+              bgClass: "bg-rose-50 dark:bg-rose-950/30",
+              textClass: "text-rose-600 dark:text-rose-400",
+            },
+            {
+              icon: Award,
+              title: "6. Ace Your Interview",
+              text: "Build the comfort, muscle memory, and confidence needed to sit through challenging corporate loops. Walk into your real-world interviews fully prepared.",
+              bgClass: "bg-teal-50 dark:bg-teal-950/30",
+              textClass: "text-teal-600 dark:text-teal-400",
+            },
           ].map((item, i) => (
             <motion.div
               key={i}
-              className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition"
+              className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-8 shadow-xs hover:shadow-md transition duration-300 flex flex-col justify-between"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: i * 0.15 }}
             >
-              <div className={`flex items-center justify-center w-12 h-12 bg-${item.color}-100 rounded-full mb-4`}>
-                <item.icon className={`text-${item.color}-600 w-6 h-6`} />
-              </div>
+              <div>
+                <div className={`flex items-center justify-center w-12 h-12 ${item.bgClass} rounded-xl mb-6`}>
+                  <item.icon className={`${item.textClass} w-6 h-6`} />
+                </div>
 
-              <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-              <p className="text-gray-600">{item.text}</p>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{item.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{item.text}</p>
+              </div>
             </motion.div>
           ))}
         </div>

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { chatSession } from "@/utils/GeminiAIModel";
 import { LoaderCircle, Upload, Lock } from "lucide-react";
-import BackButton from "../../_components/BackButton";
+import BackButton from '@/components/BackButton';
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { db } from "@/utils/db";
@@ -147,25 +147,25 @@ function ResumeAnalyzer() {
     })).reverse(); // Show oldest to newest left to right
 
     return (
-        <div className="p-10 md:px-20 lg:px-32 min-h-screen bg-gray-50">
+        <div className="p-10 md:px-20 lg:px-32 min-h-screen bg-gray-50 dark:bg-gray-950">
             {/* Header with Back Button */}
             <div className="flex items-center gap-4 mb-8">
                 <BackButton variant="inline" className="mb-0" />
                 <div>
-                    <h2 className="font-bold text-3xl text-gray-900">Resume Analyzer</h2>
-                    <p className="text-gray-500 text-sm md:text-base">AI-powered resume analysis and feedback.</p>
+                    <h2 className="font-bold text-3xl text-gray-900 dark:text-white">Resume Analyzer</h2>
+                    <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm md:text-base">AI-powered resume analysis and feedback.</p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
                 {/* Left Column: Upload Section & History */}
                 <div className="flex flex-col gap-6 lg:sticky lg:top-10 h-fit">
-                    <div className={`p-8 border rounded-2xl shadow-sm bg-white flex flex-col items-center justify-center transition-all duration-300 ${analysisResult ? 'h-auto py-10' : 'h-[400px]'}`}>
-                        <div className="bg-blue-50 p-6 rounded-full mb-6">
+                    <div className={`p-8 border rounded-2xl shadow-sm bg-white dark:bg-gray-900 flex flex-col items-center justify-center transition-all duration-300 ${analysisResult ? 'h-auto py-10' : 'h-[400px]'}`}>
+                        <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-full mb-6">
                             <Upload className="h-10 w-10 text-blue-600" />
                         </div>
-                        <h3 className="text-xl font-bold mb-2 text-gray-800">Upload Your Resume</h3>
-                        <p className="text-sm text-gray-500 mb-8 text-center max-w-xs">
+                        <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-gray-100">Upload Your Resume</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-8 text-center max-w-xs">
                             Upload your resume (PDF, DOCX, Image) to get an instant ATS score and personalized feedback.
                         </p>
 
@@ -178,11 +178,11 @@ function ResumeAnalyzer() {
 
                         {!canUse ? (
                             <div className="flex flex-col items-center gap-3 py-8 text-center">
-                                <div className="p-3 rounded-full bg-orange-100">
+                                <div className="p-3 rounded-full bg-orange-100 dark:bg-orange-900/30">
                                     <Lock className="w-6 h-6 text-orange-500" />
                                 </div>
-                                <p className="font-semibold text-gray-800">Weekly Limit Reached</p>
-                                <p className="text-xs text-gray-500">{used}/{limit} free analyses used. Resets Monday.</p>
+                                <p className="font-semibold text-gray-800 dark:text-gray-100">Weekly Limit Reached</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">{used}/{limit} free analyses used. Resets Monday.</p>
                                 <Link href="/upgrade">
                                     <Button className="bg-orange-500 hover:bg-orange-600 text-white text-sm">
                                         Upgrade to Pro — ₹100
@@ -202,8 +202,8 @@ function ResumeAnalyzer() {
 
                     {/* History Chart */}
                     {resumeHistory.length > 0 && (
-                        <div className="p-6 border rounded-2xl shadow-sm bg-white">
-                            <h3 className="font-bold text-lg mb-4 text-gray-800">Score History</h3>
+                        <div className="p-6 border rounded-2xl shadow-sm bg-white dark:bg-gray-900">
+                            <h3 className="font-bold text-lg mb-4 text-gray-800 dark:text-gray-100">Score History</h3>
                             <div className="h-[200px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <LineChart data={chartData}>
@@ -231,13 +231,13 @@ function ResumeAnalyzer() {
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
 
                             {/* Score Card */}
-                            <div className="p-6 border rounded-2xl shadow-sm bg-white relative overflow-hidden flex flex-col justify-center items-center text-center">
+                            <div className="p-6 border rounded-2xl shadow-sm bg-white dark:bg-gray-900 relative overflow-hidden flex flex-col justify-center items-center text-center">
                                 <div className={`absolute top-0 left-0 w-full h-2 ${analysisResult.score >= 80 ? "bg-green-500" : analysisResult.score >= 50 ? "bg-yellow-500" : "bg-red-500"}`}></div>
-                                <h3 className="text-xl font-bold text-gray-800 mb-2">ATS Score</h3>
+                                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">ATS Score</h3>
                                 <div className={`text-6xl font-black mb-2 ${analysisResult.score >= 80 ? "text-green-600" : analysisResult.score >= 50 ? "text-yellow-600" : "text-red-600"}`}>
                                     {analysisResult.score}
                                 </div>
-                                <span className="text-gray-400 font-medium">out of 100</span>
+                                <span className="text-gray-400 dark:text-gray-500 font-medium">out of 100</span>
 
                                 <div className="w-full bg-gray-200 rounded-full h-2.5 mt-6 max-w-[200px]">
                                     <div
@@ -248,23 +248,23 @@ function ResumeAnalyzer() {
                             </div>
 
                             {/* Feedback Card */}
-                            <div className="p-6 border rounded-2xl shadow-sm bg-white">
+                            <div className="p-6 border rounded-2xl shadow-sm bg-white dark:bg-gray-900">
                                 <h4 className="font-bold text-lg mb-4 flex items-center gap-2">
-                                    <span className="p-2 bg-blue-100 rounded-lg text-blue-600">💡</span> Feedback
+                                    <span className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600">💡</span> Feedback
                                 </h4>
-                                <p className="text-gray-700 leading-relaxed text-sm">
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
                                     {analysisResult.feedback}
                                 </p>
                             </div>
 
                             {/* Improvements Card */}
-                            <div className="p-6 border rounded-2xl shadow-sm bg-white">
+                            <div className="p-6 border rounded-2xl shadow-sm bg-white dark:bg-gray-900">
                                 <h4 className="font-bold text-lg mb-4 flex items-center gap-2">
-                                    <span className="p-2 bg-purple-100 rounded-lg text-purple-600">🚀</span> Improvements
+                                    <span className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600">🚀</span> Improvements
                                 </h4>
                                 <ul className="space-y-3">
                                     {analysisResult.improvements.map((item, index) => (
-                                        <li key={index} className="flex gap-3 text-sm text-gray-700">
+                                        <li key={index} className="flex gap-3 text-sm text-gray-700 dark:text-gray-300">
                                             <span className="font-bold text-purple-500 select-none">•</span>
                                             {item}
                                         </li>

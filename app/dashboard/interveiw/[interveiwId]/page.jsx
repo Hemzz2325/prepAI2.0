@@ -37,7 +37,7 @@ function Interview({ params: paramsPromise }) {
         {/* LEFT SIDE */}
         <div className="flex flex-col gap-5">
 
-          <div className="flex flex-col p-4 sm:p-5 rounded-lg border gap-4">
+          <div className="flex flex-col p-4 sm:p-5 rounded-lg border border-border bg-card gap-4">
             <h2 className="text-base sm:text-lg">
               <strong>Job Role/Job Position:</strong> {interviewData?.jobPosition}
             </h2>
@@ -55,7 +55,7 @@ function Interview({ params: paramsPromise }) {
             </h2>
           </div>
 
-          <div className="p-4 sm:p-5 border rounded-lg border-yellow-300 bg-yellow-100">
+          <div className="p-4 sm:p-5 border rounded-lg border-yellow-300 dark:border-yellow-700/50 bg-yellow-100 dark:bg-yellow-900/30">
             <h2 className="flex gap-2 items-center text-yellow-600 text-sm sm:text-base">
               <Lightbulb />
               <strong>Information</strong>

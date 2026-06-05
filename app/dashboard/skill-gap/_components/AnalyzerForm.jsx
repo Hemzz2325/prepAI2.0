@@ -72,15 +72,15 @@ function AnalyzerForm({ onAnalysisComplete, loading, setLoading }) {
     };
 
     return (
-        <div className="p-6 bg-white rounded-2xl shadow-sm border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <div className="p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-purple-600" />
                 Analyze Your Skills
             </h2>
 
             {/* Resume Upload */}
             <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Upload Resume (TXT)
                 </label>
                 <div className="relative">
@@ -93,21 +93,21 @@ function AnalyzerForm({ onAnalysisComplete, loading, setLoading }) {
                     />
                     <label
                         htmlFor="resume-upload"
-                        className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-purple-400 hover:bg-purple-50 transition-all"
+                        className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer hover:border-purple-400 hover:bg-purple-50 dark:bg-purple-900/20 transition-all"
                     >
-                        <Upload className="w-5 h-5 text-gray-400" />
-                        <span className="text-sm text-gray-600">
+                        <Upload className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
                             {resumeText ? "Resume uploaded ✓" : "Click to upload resume"}
                         </span>
                     </label>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                     Or paste your resume text below
                 </p>
                 <textarea
                     value={resumeText}
                     onChange={(e) => setResumeText(e.target.value)}
-                    className="w-full mt-2 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full mt-2 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     rows="6"
                     placeholder="Paste your resume here..."
                 />
@@ -115,28 +115,28 @@ function AnalyzerForm({ onAnalysisComplete, loading, setLoading }) {
 
             {/* Target Role */}
             <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Target Job Role *
                 </label>
                 <input
                     type="text"
                     value={targetRole}
                     onChange={(e) => setTargetRole(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="e.g., Senior React Developer"
                 />
             </div>
 
             {/* Target Company (Optional) */}
             <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     Target Company (Optional)
                 </label>
                 <input
                     type="text"
                     value={targetCompany}
                     onChange={(e) => setTargetCompany(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="e.g., Google, Amazon"
                 />
             </div>

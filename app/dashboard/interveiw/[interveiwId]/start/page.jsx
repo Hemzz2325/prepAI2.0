@@ -19,12 +19,6 @@ function StartInterview({ params: paramsPromise }) {
 
   // Debug logs
   useEffect(() => {
-    console.log("========== START PAGE DEBUG ==========")
-    console.log("Window location href:", typeof window !== 'undefined' ? window.location.href : 'N/A')
-    console.log("Raw params from URL:", params)
-    console.log("params.interveiwId:", params?.interveiwId)
-    console.log("All params keys:", Object.keys(params || {}))
-    console.log("=========================================")
   }, [params])
 
   useEffect(() => {
@@ -32,7 +26,6 @@ function StartInterview({ params: paramsPromise }) {
       try {
         setLoading(true)
         const interviewId = params?.interveiwId
-        console.log("Starting GetInterviewDetails with ID:", interviewId)
 
         if (!interviewId) {
           console.error("Interview ID is missing or undefined")
@@ -41,21 +34,16 @@ function StartInterview({ params: paramsPromise }) {
           return
         }
 
-        console.log("Querying database for mockId:", interviewId)
         let result = await db.select().from(MockInterview)
           .where(eq(MockInterview.mockId, interviewId))
 
-        console.log("Database query result by mockId:", result)
 
         // If not found by mockId, try querying all and find by mockId
         if (!result || result.length === 0) {
-          console.log("Not found by mockId, trying alternate query...")
           const allResults = await db.select().from(MockInterview)
-          console.log("All interviews in DB:", allResults)
 
           // Find the one with matching mockId
           result = allResults.filter(item => item.mockId === interviewId)
-          console.log("Filtered result:", result)
         }
 
         if (!result || result.length === 0) {
@@ -66,7 +54,6 @@ function StartInterview({ params: paramsPromise }) {
         }
 
         const jsonMockResp = JSON.parse(result[0].jsonMockResp)
-        console.log("Parsed questions:", jsonMockResp)
         setMockInterviewQuestion(jsonMockResp)
         setInterviewData(result[0])
       } catch (err) {
@@ -93,7 +80,7 @@ function StartInterview({ params: paramsPromise }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4 md:p-6 flex flex-col">
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 flex-grow'>
         {/* Left: Questions */}
         <div className="order-2 lg:order-1">
@@ -122,9 +109,9 @@ function StartInterview({ params: paramsPromise }) {
       </div>
 
       {/* Navigation Buttons - Sticky Bottom */}
-      <div className='sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 mt-4 shadow-lg rounded-t-2xl'>
+      <div className='sticky bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 p-4 mt-4 shadow-lg rounded-t-2xl'>
         <div className='flex justify-between items-center max-w-7xl mx-auto'>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500">
             Question {activeQuestionIndex + 1} of {mockInterviewQuestion?.length}
           </div>
 
@@ -132,7 +119,7 @@ function StartInterview({ params: paramsPromise }) {
             {activeQuestionIndex > 0 &&
               <Button
                 variant="outline"
-                className="border-gray-300 text-gray-700 hover:bg-gray-100"
+                className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800"
                 onClick={() => setActiveQuestionIndex(activeQuestionIndex - 1)}
               >
                 ← Previous

@@ -8,14 +8,16 @@ import { motion } from "framer-motion";
 import { Plus, Briefcase } from "lucide-react";
 import AddJobDialog from "./_components/AddJobDialog";
 import JobCard from "./_components/JobCard";
-import BackButton from "@/app/_components/BackButton";
+import BackButton from '@/components/BackButton';
+import { JobTrackerSkeleton } from "@/components/Skeletons";
+
 
 const STATUSES = [
-    { id: "Applied", label: "📝 Applied", color: "bg-blue-50 border-blue-200" },
-    { id: "Interview", label: "📞 Interview", color: "bg-purple-50 border-purple-200" },
-    { id: "Shortlisted", label: "⭐ Shortlisted", color: "bg-yellow-50 border-yellow-200" },
-    { id: "Rejected", label: "❌ Rejected", color: "bg-red-50 border-red-200" },
-    { id: "Offer", label: "🎉 Offer", color: "bg-green-50 border-green-200" },
+    { id: "Applied", label: "📝 Applied", color: "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700/40" },
+    { id: "Interview", label: "📞 Interview", color: "bg-purple-50 dark:bg-purple-900/20 border-purple-200" },
+    { id: "Shortlisted", label: "⭐ Shortlisted", color: "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200" },
+    { id: "Rejected", label: "❌ Rejected", color: "bg-red-50 dark:bg-red-900/20 border-red-200" },
+    { id: "Offer", label: "🎉 Offer", color: "bg-green-50 dark:bg-green-900/20 border-green-200" },
 ];
 
 function JobTrackerPage() {
@@ -65,26 +67,20 @@ function JobTrackerPage() {
         }
     };
 
-    if (loading) {
-        return (
-            <div className="p-10 flex justify-center items-center h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            </div>
-        );
-    }
+    if (loading) return <JobTrackerSkeleton />;
 
     return (
-        <div className="p-5 sm:p-8 md:p-10 bg-gray-50 min-h-screen">
+        <div className="p-5 sm:p-8 md:p-10 bg-background min-h-screen">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
                 <div className="flex items-center gap-4">
                     <BackButton variant="inline" className="mb-0" />
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                             <Briefcase className="w-8 h-8 text-blue-600" />
                             Job Tracker
                         </h1>
-                        <p className="text-gray-500 text-sm mt-1">
+                        <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm mt-1">
                             Manage your job applications in one place
                         </p>
                     </div>
@@ -107,14 +103,14 @@ function JobTrackerPage() {
                     return (
                         <div key={status.id} className="flex flex-col">
                             <div className={`p-4 rounded-t-xl border-2 ${status.color}`}>
-                                <h3 className="font-bold text-gray-800 text-sm">
+                                <h3 className="font-bold text-gray-800 dark:text-gray-100 text-sm">
                                     {status.label}
                                 </h3>
-                                <p className="text-xs text-gray-500 mt-1">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                                     {statusJobs.length} {statusJobs.length === 1 ? "job" : "jobs"}
                                 </p>
                             </div>
-                            <div className="flex-1 bg-white border-2 border-t-0 border-gray-200 rounded-b-xl p-3 min-h-[400px] space-y-3">
+                            <div className="flex-1 bg-white dark:bg-gray-900 border-2 border-t-0 border-gray-200 dark:border-gray-700 rounded-b-xl p-3 min-h-[400px] space-y-3">
                                 {statusJobs.map((job) => (
                                     <JobCard
                                         key={job.id}
@@ -125,7 +121,7 @@ function JobTrackerPage() {
                                     />
                                 ))}
                                 {statusJobs.length === 0 && (
-                                    <p className="text-center text-gray-400 text-sm mt-10">
+                                    <p className="text-center text-gray-400 dark:text-gray-500 text-sm mt-10">
                                         No jobs yet
                                     </p>
                                 )}

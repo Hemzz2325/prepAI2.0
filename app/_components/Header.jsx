@@ -15,7 +15,6 @@ const Header = () => {
   const [userPlan, setUserPlan] = useState(null); // null = loading, 'free' | 'pro'
 
   useEffect(() => {
-    console.log("Current path:", path);
     setIsMenuOpen(false);
   }, [path]);
 
@@ -45,11 +44,11 @@ const Header = () => {
         <div className="flex flex-col items-center gap-0.5">
           <Image src="/logo.svg" alt="Logo" width={60} height={80} />
           {userPlan === "pro" ? (
-            <span className="flex items-center gap-0.5 text-[10px] font-bold text-yellow-600 bg-yellow-50 border border-yellow-300 rounded-full px-2 py-0.5">
+            <span className="flex items-center gap-0.5 text-[10px] font-bold text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700/50 rounded-full px-2 py-0.5">
               <Crown className="w-2.5 h-2.5" /> PRO
             </span>
           ) : userPlan === "free" ? (
-            <span className="text-[10px] text-gray-400 font-medium bg-gray-100 rounded-full px-2 py-0.5">Basic</span>
+            <span className="text-[10px] text-gray-400 dark:text-gray-500 font-medium bg-gray-100 dark:bg-gray-800 rounded-full px-2 py-0.5">Basic</span>
           ) : null}
         </div>
       </Link>
@@ -84,7 +83,7 @@ const Header = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-800 transition-colors"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -98,15 +97,15 @@ const Header = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 shadow-lg border-t border-gray-100 dark:border-gray-800 md:hidden p-4 flex flex-col gap-4"
+            className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 dark:bg-gray-900 shadow-lg border-t border-gray-100 dark:border-gray-800 dark:border-gray-800 md:hidden p-4 flex flex-col gap-4"
           >
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={`p-3 rounded-lg transition-all ${isActive(link.href)
-                    ? 'bg-green-50 text-green-600 font-bold dark:bg-green-900/20'
-                    : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                    ? 'bg-green-50 dark:bg-green-900/20 text-green-600 font-bold dark:bg-green-900/20'
+                    : 'hover:bg-gray-50 dark:bg-gray-950 dark:hover:bg-gray-800'
                   }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -117,8 +116,8 @@ const Header = () => {
               <Link
                 href="/admin"
                 className={`p-3 rounded-lg transition-all ${isActive('/admin')
-                    ? 'bg-red-50 text-red-600 font-bold dark:bg-red-900/20'
-                    : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                    ? 'bg-red-50 dark:bg-red-900/20 text-red-600 font-bold dark:bg-red-900/20'
+                    : 'hover:bg-gray-50 dark:bg-gray-950 dark:hover:bg-gray-800'
                   }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -145,13 +144,13 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+      className="p-2 rounded-full hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-800 transition-colors"
       aria-label="Toggle Theme"
     >
       {theme === "dark" ? (
         <Sun className="w-5 h-5 text-yellow-500" />
       ) : (
-        <Moon className="w-5 h-5 text-gray-700" />
+        <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
       )}
     </button>
   );

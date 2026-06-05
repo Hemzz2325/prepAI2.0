@@ -12,7 +12,17 @@ export async function POST(req) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { amount } = await req.json();
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    body = {};
+  }
+
+  const amount = body.amount;
+  if (!amount || typeof amount !== "number" || amount <= 0) {
+    return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+  }
 
   if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
     return NextResponse.json({ error: "Razorpay keys not configured" }, { status: 500 });

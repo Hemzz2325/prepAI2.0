@@ -8,6 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import Script from "next/script";
 import { useState } from "react";
 
+
 export default function Upgrade() {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
@@ -58,7 +59,7 @@ export default function Upgrade() {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: orderData.amount,
         currency: "INR",
-        name: "PrepAi Pro",
+        name: "Placify AI Pro",
         description: "Lifetime Upgrade to Pro Plan",
         image: "/logo.svg",
         order_id: orderData.orderId,
@@ -111,7 +112,7 @@ export default function Upgrade() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/">
-            <Image src="/logo.svg" alt="PrepAi Logo" width={60} height={80} />
+            <Image src="/logo.svg" alt="Placify AI Logo" width={60} height={80} />
           </Link>
           <div className="flex gap-4">
             <Link href="/dashboard">
@@ -293,3 +294,4 @@ export default function Upgrade() {
     </div>
   );
 }
+

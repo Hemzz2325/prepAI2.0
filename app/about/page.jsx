@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight, Users, Target, Heart } from 'lucide-react';
-import BackButton from '../_components/BackButton';
+import BackButton from '@/components/BackButton';
 
 export default function AboutPage() {
     const fadeIn = {
@@ -142,7 +142,7 @@ export default function AboutPage() {
                         transition={{ delay: 0.1 }}
                         className="text-xl text-gray-300 mb-8"
                     >
-                        Join thousands of candidates who are landing their dream jobs with PrepAi.
+                        Join thousands of candidates who are landing their dream jobs with Placify AI.
                     </motion.p>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

@@ -6,7 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { eq, desc } from "drizzle-orm";
 import { motion } from "framer-motion";
 import { Brain } from "lucide-react";
-import BackButton from "@/app/_components/BackButton";
+import BackButton from '@/components/BackButton';
 import AnalyzerForm from "./_components/AnalyzerForm";
 import GapResults from "./_components/GapResults";
 import AnalysisHistory from "./_components/AnalysisHistory";
@@ -42,7 +42,7 @@ function SkillGapPage() {
     };
 
     return (
-        <div className="p-5 sm:p-8 md:p-10 bg-gray-50 min-h-screen">
+        <div className="p-5 sm:p-8 md:p-10 bg-background min-h-screen">
             {/* Header */}
             <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -51,11 +51,11 @@ function SkillGapPage() {
             >
                 <BackButton variant="inline" className="mb-0" />
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                         <Brain className="w-8 h-8 text-purple-600" />
                         Skill Gap Analyzer
                     </h1>
-                    <p className="text-gray-500 text-sm mt-1">
+                    <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm mt-1">
                         Get a personalized learning roadmap to land your dream job
                     </p>
                 </div>

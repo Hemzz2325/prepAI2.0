@@ -325,23 +325,23 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
     }
 
     return (
-        <div className="h-screen flex flex-col bg-gray-50">
-            <div className="bg-white border-b border-gray-200 p-4">
+        <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4">
                 <div className="flex items-center justify-between max-w-[1800px] mx-auto">
                     <div className="flex items-center gap-4">
                         <Button variant="outline" size="sm" onClick={() => router.push("/dashboard/coding")}>
                             &larr; Back
                         </Button>
                         <div>
-                            <h2 className="font-bold text-xl text-gray-900">{challenge.title}</h2>
+                            <h2 className="font-bold text-xl text-gray-900 dark:text-white">{challenge.title}</h2>
                             <div className="flex items-center gap-2 mt-1">
-                                <span className={`text-xs px-2 py-1 rounded-full font-semibold ${challenge.difficulty === "Easy" ? "bg-green-100 text-green-700" :
-                                    challenge.difficulty === "Medium" ? "bg-yellow-100 text-yellow-700" :
-                                        "bg-red-100 text-red-700"
+                                <span className={`text-xs px-2 py-1 rounded-full font-semibold ${challenge.difficulty === "Easy" ? "bg-green-100 dark:bg-green-900/30 text-green-700" :
+                                    challenge.difficulty === "Medium" ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700" :
+                                        "bg-red-100 dark:bg-red-900/30 text-red-700"
                                     }`}>
                                     {challenge.difficulty}
                                 </span>
-                                <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700 font-semibold">
+                                <span className="text-xs px-2 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 font-semibold">
                                     {challenge.topic}
                                 </span>
                             </div>
@@ -352,7 +352,7 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
                         <select
                             value={language}
                             onChange={(e) => setLanguage(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
                             disabled={submitted}
                         >
                             {languages.map((lang) => (
@@ -430,7 +430,7 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
             </div>
 
             {submitted && (
-                <div className="bg-green-50 border-b border-green-200 p-4">
+                <div className="bg-green-50 dark:bg-green-900/20 border-b border-green-200 p-4">
                     <div className="max-w-[1800px] mx-auto flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <CheckCircle className="h-6 w-6 text-green-600" />
@@ -446,24 +446,24 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
             )}
 
             <div className="flex-1 flex overflow-hidden">
-                <div className="w-1/2 border-r border-gray-200 overflow-y-auto bg-white">
+                <div className="w-1/2 border-r border-gray-200 dark:border-gray-700 overflow-y-auto bg-white dark:bg-gray-900">
                     <div className="p-6">
                         <h3 className="font-bold text-lg mb-4">Description</h3>
-                        <p className="text-gray-700 leading-relaxed mb-6">{challenge.description}</p>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">{challenge.description}</p>
 
                         <h3 className="font-bold text-lg mb-3">Constraints</h3>
                         <ul className="list-disc list-inside space-y-1 mb-6">
                             {challenge.constraints.map((constraint, idx) => (
-                                <li key={idx} className="text-gray-700 text-sm">{constraint}</li>
+                                <li key={idx} className="text-gray-700 dark:text-gray-300 text-sm">{constraint}</li>
                             ))}
                         </ul>
 
                         <h3 className="font-bold text-lg mb-3">Examples</h3>
                         {challenge.examples.map((example, idx) => (
-                            <div key={idx} className="mb-4 p-4 bg-gray-50 rounded-lg">
+                            <div key={idx} className="mb-4 p-4 bg-gray-50 dark:bg-gray-950 rounded-lg">
                                 <p className="text-sm mb-1"><strong>Input:</strong> {example.input}</p>
                                 <p className="text-sm mb-1"><strong>Output:</strong> {example.output}</p>
-                                <p className="text-sm text-gray-600"><strong>Explanation:</strong> {example.explanation}</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-300"><strong>Explanation:</strong> {example.explanation}</p>
                             </div>
                         ))}
 
@@ -499,7 +499,7 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
                         </div>
 
                         {showAIHelper && (
-                            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700/40">
                                 <h4 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
                                     <span>🤖</span> AI Assistant
                                 </h4>
@@ -519,7 +519,7 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
                 </div>
 
                 <div className="w-1/2 flex flex-col">
-                    <div className="flex-1 border-b border-gray-200">
+                    <div className="flex-1 border-b border-gray-200 dark:border-gray-700">
                         <Editor
                             height="100%"
                             language={language}
@@ -565,13 +565,13 @@ Return ONLY a JSON object with this exact structure (no markdown, no code blocks
                                             </span>
                                         </div>
                                         <div className="text-xs space-y-1">
-                                            <div className="text-gray-400">
+                                            <div className="text-gray-400 dark:text-gray-500">
                                                 Input: <span className="text-white">{JSON.stringify(result.input)}</span>
                                             </div>
-                                            <div className="text-gray-400">
+                                            <div className="text-gray-400 dark:text-gray-500">
                                                 Expected: <span className="text-white">{JSON.stringify(result.expected)}</span>
                                             </div>
-                                            <div className="text-gray-400">
+                                            <div className="text-gray-400 dark:text-gray-500">
                                                 Got: <span className={result.passed ? 'text-green-400' : 'text-red-400'}>
                                                     {result.error ? `Error: ${result.error}` : JSON.stringify(result.actual)}
                                                 </span>

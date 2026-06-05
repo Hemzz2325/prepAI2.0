@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { chatSession } from "@/utils/GeminiAIModel";
 import { toast } from "sonner";
 import { LoaderCircle, CheckCircle, Sparkles, Briefcase, Mic, Volume2, StopCircle, GraduationCap, Lock } from "lucide-react";
-import BackButton from "../../_components/BackButton";
+import BackButton from '@/components/BackButton';
 import { useSpeech } from "./_hooks/useSpeech";
 import Assessment from "./_components/Assessment";
 import { usePlan } from "@/hooks/usePlan";
@@ -102,7 +102,7 @@ function CommunicationTrainer() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <motion.div
@@ -113,22 +113,22 @@ function CommunicationTrainer() {
                     <div className="absolute left-0 top-0">
                         <BackButton variant="inline" className="mb-0" />
                     </div>
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
                         Communication <span className="text-pink-600">Trainer</span>
                     </h1>
-                    <p className="text-gray-600 max-w-2xl mx-auto">
+                    <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                         Master your communication skills with AI-powered speech analysis and corporate-style assessments.
                     </p>
                 </motion.div>
 
                 {/* Tabs */}
                 <div className="flex justify-center mb-8">
-                    <div className="bg-white p-1 rounded-xl shadow-sm border border-gray-200 inline-flex">
+                    <div className="bg-white dark:bg-gray-900 p-1 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 inline-flex">
                         <button
                             onClick={() => setActiveTab("practice")}
                             className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === "practice"
                                 ? "bg-pink-600 text-white shadow-md"
-                                : "text-gray-600 hover:bg-gray-50"
+                                : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-950"
                                 }`}
                         >
                             <Mic className="w-4 h-4 inline-block mr-2" />
@@ -138,7 +138,7 @@ function CommunicationTrainer() {
                             onClick={() => setActiveTab("assessment")}
                             className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === "assessment"
                                 ? "bg-pink-600 text-white shadow-md"
-                                : "text-gray-600 hover:bg-gray-50"
+                                : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-950"
                                 }`}
                         >
                             <GraduationCap className="w-4 h-4 inline-block mr-2" />
@@ -161,31 +161,31 @@ function CommunicationTrainer() {
                                     onClick={() => setMode(m.id)}
                                     className={`p-4 rounded-xl border-2 transition-all text-left ${mode === m.id
                                         ? `border-${m.color}-500 bg-${m.color}-50`
-                                        : "border-gray-200 bg-white hover:border-gray-300"
+                                        : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-gray-300 dark:border-gray-600"
                                         }`}
                                 >
                                     <div className={`p-2 rounded-lg inline-block mb-2 bg-${m.color}-100`}>
                                         <m.icon className={`w-5 h-5 text-${m.color}-600`} />
                                     </div>
-                                    <h3 className="font-bold text-gray-900">{m.title}</h3>
-                                    <p className="text-xs text-gray-600 mt-1">{m.description}</p>
+                                    <h3 className="font-bold text-gray-900 dark:text-white">{m.title}</h3>
+                                    <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">{m.description}</p>
                                 </button>
                             ))}
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Recording Area */}
-                            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 flex flex-col items-center justify-center min-h-[500px]">
-                                <div className={`w-32 h-32 rounded-full flex items-center justify-center mb-6 transition-all ${isListening ? "bg-red-50 animate-pulse" : "bg-gray-50"
+                            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center min-h-[500px]">
+                                <div className={`w-32 h-32 rounded-full flex items-center justify-center mb-6 transition-all ${isListening ? "bg-red-50 dark:bg-red-900/20 animate-pulse" : "bg-gray-50 dark:bg-gray-950"
                                     }`}>
-                                    <Mic className={`w-12 h-12 ${isListening ? "text-red-500" : "text-gray-400"}`} />
+                                    <Mic className={`w-12 h-12 ${isListening ? "text-red-500" : "text-gray-400 dark:text-gray-500"}`} />
                                 </div>
 
                                 <div className="text-center mb-8 w-full">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                                         {isListening ? "Listening..." : "Tap to Speak"}
                                     </h3>
-                                    <p className="text-gray-500 max-w-md mx-auto italic min-h-[3rem]">
+                                    <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 max-w-md mx-auto italic min-h-[3rem]">
                                         "{transcript || "Your speech will appear here..."}"
                                     </p>
                                 </div>
@@ -213,7 +213,7 @@ function CommunicationTrainer() {
                                     !canUse ? (
                                         <div className="mt-6 flex flex-col items-center gap-2 text-center">
                                             <Lock className="w-5 h-5 text-orange-500" />
-                                            <p className="text-sm text-gray-600">Weekly limit reached ({used}/{limit}). <Link href="/upgrade" className="text-orange-500 underline font-semibold">Upgrade to Pro</Link></p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-300">Weekly limit reached ({used}/{limit}). <Link href="/upgrade" className="text-orange-500 underline font-semibold">Upgrade to Pro</Link></p>
                                         </div>
                                     ) : (
                                     <Button onClick={processSpeech} className="mt-6 w-full max-w-xs" disabled={loading}>
@@ -225,33 +225,33 @@ function CommunicationTrainer() {
                             </div>
 
                             {/* Output Area */}
-                            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 min-h-[500px] flex flex-col">
-                                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 min-h-[500px] flex flex-col">
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
                                     <Sparkles className="w-5 h-5 text-yellow-500 mr-2" />
                                     AI Feedback & Correction
                                 </h3>
-                                <div className="flex-1 bg-gray-50 rounded-xl p-6 overflow-y-auto border border-gray-100">
+                                <div className="flex-1 bg-gray-50 dark:bg-gray-950 rounded-xl p-6 overflow-y-auto border border-gray-100 dark:border-gray-800">
                                     {loading ? (
-                                        <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                                        <div className="flex flex-col items-center justify-center h-full text-gray-400 dark:text-gray-500">
                                             <LoaderCircle className="w-8 h-8 animate-spin mb-2" />
                                             <p>Analyzing your speech patterns...</p>
                                         </div>
                                     ) : outputText ? (
                                         <div className="space-y-6">
                                             {/* Corrected Text */}
-                                            <div className="bg-white p-4 rounded-lg border border-green-100 shadow-sm">
+                                            <div className="bg-white dark:bg-gray-900 p-4 rounded-lg border border-green-100 shadow-sm">
                                                 <h4 className="text-sm font-bold text-green-700 mb-2 uppercase tracking-wide">Better Version</h4>
-                                                <p className="text-gray-800 text-lg leading-relaxed font-medium">
+                                                <p className="text-gray-800 dark:text-gray-100 text-lg leading-relaxed font-medium">
                                                     "{outputText.corrected}"
                                                 </p>
                                             </div>
 
                                             {/* Feedback Points */}
                                             <div>
-                                                <h4 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Key Improvements</h4>
+                                                <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">Key Improvements</h4>
                                                 <ul className="space-y-2">
                                                     {outputText.feedback?.map((point, i) => (
-                                                        <li key={i} className="flex items-start gap-2 text-gray-600 text-sm">
+                                                        <li key={i} className="flex items-start gap-2 text-gray-600 dark:text-gray-300 text-sm">
                                                             <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
                                                             <span>{point}</span>
                                                         </li>
@@ -261,11 +261,11 @@ function CommunicationTrainer() {
 
                                             {/* Filler Words */}
                                             {outputText.fillerWords?.length > 0 && (
-                                                <div className="bg-red-50 p-4 rounded-lg border border-red-100">
+                                                <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-100 dark:border-red-800/40">
                                                     <h4 className="text-sm font-bold text-red-700 mb-2 uppercase tracking-wide">Words to Minimize</h4>
                                                     <div className="flex flex-wrap gap-2">
                                                         {outputText.fillerWords.map((word, i) => (
-                                                            <span key={i} className="px-2 py-1 bg-white text-red-600 text-xs font-bold rounded border border-red-200">
+                                                            <span key={i} className="px-2 py-1 bg-white dark:bg-gray-900 text-red-600 text-xs font-bold rounded border border-red-200">
                                                                 {word}
                                                             </span>
                                                         ))}
@@ -274,12 +274,12 @@ function CommunicationTrainer() {
                                             )}
 
                                             {/* Why */}
-                                            <div className="text-xs text-gray-500 italic border-t pt-4 mt-4">
+                                            <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 italic border-t pt-4 mt-4">
                                                 💡 {outputText.improvements}
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                                        <div className="flex flex-col items-center justify-center h-full text-gray-400 dark:text-gray-500">
                                             <Volume2 className="w-12 h-12 mb-2 opacity-20" />
                                             <p>Record and analyze to see results</p>
                                         </div>

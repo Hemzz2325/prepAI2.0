@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePlan } from "@/hooks/usePlan";
 import Link from "next/link";
+import { toast } from "sonner";
 
 function Addinterveiw() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -146,13 +147,13 @@ IMPORTANT: Return ONLY a valid JSON array. No markdown, no extra text.
       try {
         parsed = JSON.parse(cleaned);
       } catch (err) {
-        alert("AI response was invalid. Please try again.");
+        toast.error('AI returned an invalid response. Please try again.');
         setLoading(false);
         return;
       }
 
       if (!parsed || parsed.length === 0) {
-        alert("Generated questions are empty. Please try again.");
+        toast.error('AI generated no questions. Please try again.');
         setLoading(false);
         return;
       }
@@ -163,7 +164,10 @@ IMPORTANT: Return ONLY a valid JSON array. No markdown, no extra text.
       // Consume one usage slot before saving
       const allowed = await consume();
       if (!allowed) {
-        alert("You have reached your weekly interview limit. Please upgrade to Pro!");
+        toast.warning('Weekly interview limit reached. Upgrade to Pro for unlimited access!', {
+          action: { label: 'Upgrade', onClick: () => router.push('/upgrade') },
+          duration: 6000,
+        });
         setLoading(false);
         return;
       }
@@ -183,7 +187,7 @@ IMPORTANT: Return ONLY a valid JSON array. No markdown, no extra text.
       await new Promise((res) => setTimeout(res, 300));
       router.push(`/dashboard/interveiw/${mockId}`);
     } catch (error) {
-      alert("Error: " + error.message);
+      toast.error(error?.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -197,13 +201,13 @@ IMPORTANT: Return ONLY a valid JSON array. No markdown, no extra text.
         animate={{ opacity: 1, scale: 1 }}
         whileHover={{ scale: 1.05 }}
         transition={{ duration: 0.25 }}
-        className="p-10 border-2 border-dashed border-blue-300 bg-gradient-to-br from-green-50 to-indigo-50 rounded-xl hover:shadow-xl shadow-md cursor-pointer transition-all flex flex-col items-center"
+        className="p-10 border-2 border-dashed border-blue-300 dark:border-green-700/40 bg-gradient-to-br from-green-50 to-indigo-50 dark:from-green-900/10 dark:to-indigo-900/10 rounded-xl hover:shadow-xl dark:hover:shadow-none dark:hover:border-green-500/60 shadow-md cursor-pointer transition-all flex flex-col items-center"
         onClick={() => setOpenDialog(true)}
       >
-        <h2 className="text-lg text-center font-bold text-indigo-600">
+        <h2 className="text-lg text-center font-bold text-indigo-600 dark:text-green-400">
           + Add New Interview
         </h2>
-        <span className="text-xs text-gray-500 mt-1">
+        <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
           {planLoading
             ? "Loading..."
             : canUse
@@ -216,7 +220,7 @@ IMPORTANT: Return ONLY a valid JSON array. No markdown, no extra text.
       <AnimatePresence>
         {openDialog && (
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-            <DialogContent className="max-w-2xl border-2 shadow-xl rounded-2xl">
+            <DialogContent className="max-w-2xl border-2 shadow-xl rounded-2xl bg-white dark:bg-gray-900 dark:border-gray-700">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -226,11 +230,11 @@ IMPORTANT: Return ONLY a valid JSON array. No markdown, no extra text.
                 {!canUse ? (
                   /* Plan limit reached */
                   <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
-                    <div className="p-3 rounded-full bg-orange-100">
+                    <div className="p-3 rounded-full bg-orange-100 dark:bg-orange-900/30">
                       <Lock className="w-6 h-6 text-orange-500" />
                     </div>
-                    <h3 className="font-bold text-gray-800 text-xl">Weekly Interview Limit Reached</h3>
-                    <p className="text-gray-500 text-sm">
+                    <h3 className="font-bold text-gray-800 dark:text-gray-100 text-xl">Weekly Interview Limit Reached</h3>
+                    <p className="text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm">
                       You&apos;ve used <b>{used}/{limit}</b> free interviews this week.
                       <br />Resets every Monday.
                     </p>
@@ -269,7 +273,7 @@ IMPORTANT: Return ONLY a valid JSON array. No markdown, no extra text.
                         <div className="my-3">
                           <label className="block mb-2">Interview Round</label>
                           <select
-                            className="w-full p-2 border rounded-md transition-all hover:border-green-500 focus:border-green-600 focus:ring-2 focus:ring-green-300 bg-white"
+                            className="w-full p-2 border rounded-md transition-all hover:border-green-500 focus:border-green-600 focus:ring-2 focus:ring-green-300 bg-white dark:bg-gray-900"
                             value={interviewRound}
                             onChange={(e) => setInterviewRound(e.target.value)}
                           >

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import BackButton from '../_components/BackButton';
+import BackButton from '@/components/BackButton';
 import { FileText, Scale, AlertCircle, Shield } from 'lucide-react';
 
 export default function TermsPage() {
@@ -10,12 +10,12 @@ export default function TermsPage() {
         {
             icon: FileText,
             title: "1. Agreement to Terms",
-            content: "By accessing our website at PrepAI, you agree to be bound by these terms of service, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site."
+            content: "By accessing our website at Placify AI, you agree to be bound by these terms of service, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site."
         },
         {
             icon: Scale,
             title: "2. Use License",
-            content: "Permission is granted to temporarily download one copy of the materials (information or software) on PrepAI's website for personal, non-commercial transitory viewing only.",
+            content: "Permission is granted to temporarily download one copy of the materials (information or software) on Placify AI's website for personal, non-commercial transitory viewing only.",
             list: [
                 "Modify or copy the materials",
                 "Use the materials for any commercial purpose",
@@ -27,12 +27,12 @@ export default function TermsPage() {
         {
             icon: AlertCircle,
             title: "3. Disclaimer",
-            content: "The materials on PrepAI's website are provided on an 'as is' basis. PrepAI makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights."
+            content: "The materials on Placify AI's website are provided on an 'as is' basis. Placify AI makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights."
         },
         {
             icon: Shield,
             title: "4. Limitations",
-            content: "In no event shall PrepAI or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on PrepAI's website, even if PrepAI or a PrepAI authorized representative has been notified orally or in writing of the possibility of such damage."
+            content: "In no event shall Placify AI or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Placify AI's website, even if Placify AI or a Placify AI authorized representative has been notified orally or in writing of the possibility of such damage."
         }
     ];
 
@@ -70,7 +70,7 @@ export default function TermsPage() {
                         className="mb-12"
                     >
                         <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                            Please read these Terms of Service carefully before using PrepAI. By using our platform,
+                            Please read these Terms of Service carefully before using Placify AI. By using our platform,
                             you agree to be bound by these terms and conditions.
                         </p>
                     </motion.div>
@@ -124,10 +124,10 @@ export default function TermsPage() {
                             If you have any questions about these Terms of Service, please contact us at:
                         </p>
                         <a
-                            href="mailto:legal@prepai.com"
+                            href="mailto:legal@placifyai.com"
                             className="text-green-600 font-semibold hover:underline"
                         >
-                            legal@prepai.com
+                            legal@placifyai.com
                         </a>
                     </motion.div>
                 </div>

@@ -78,7 +78,14 @@ export async function POST(req) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { feature, email } = await req.json();
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    body = {};
+  }
+
+  const { feature, email } = body;
   if (!feature || !email) {
     return NextResponse.json({ error: "feature and email required" }, { status: 400 });
   }

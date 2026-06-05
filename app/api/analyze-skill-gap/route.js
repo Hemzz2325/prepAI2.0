@@ -9,7 +9,12 @@ export async function POST(req) {
   if (rateLimitResponse) return rateLimitResponse;
 
   try {
-    const body = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      body = {};
+    }
 
     // 2. Zod Validation
     const validation = parseBody(skillGapSchema, body);

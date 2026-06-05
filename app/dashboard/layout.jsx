@@ -1,14 +1,14 @@
-import Head from 'next/head'
 import React from 'react'
 import Header from '../_components/Header'
 
 const Dashboardlayout = ({children}) => {
   return (
-    <div>
-        <Header/>
-        <div className='mx-5 md:mx-20 lg:mx-36'>  {children}</div>
-        </div>
-        
+    <div className="min-h-screen bg-background">
+      <Header/>
+      <div className='mx-5 md:mx-20 lg:mx-36'>
+        {children}
+      </div>
+    </div>
   )
 }
 

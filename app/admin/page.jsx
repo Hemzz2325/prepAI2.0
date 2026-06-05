@@ -6,7 +6,7 @@ import { db } from "@/utils/db";
 import { MockInterview, CodingSubmission, UserAnswer } from "@/utils/schema";
 import { desc, eq } from "drizzle-orm";
 import { Users, FileText, Code, Activity, LoaderCircle } from "lucide-react";
-import BackButton from "../_components/BackButton";
+import BackButton from '@/components/BackButton';
 
 function AdminPanel() {
     const { user, isLoaded } = useUser();

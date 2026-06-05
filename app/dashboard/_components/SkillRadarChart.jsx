@@ -38,12 +38,12 @@ function SkillRadarChart({ interviews, codingSubmissions }) {
     ];
 
     return (
-        <div className="p-5 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 h-full">
+        <div className="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300 h-full">
             <div className="flex items-center gap-2 mb-4">
-                <div className="p-2 bg-blue-50 rounded-lg">
+                <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <span className="text-lg">📊</span>
                 </div>
-                <h2 className="font-bold text-gray-800">Skill Analysis</h2>
+                <h2 className="font-bold text-gray-800 dark:text-gray-100">Skill Analysis</h2>
             </div>
             <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">

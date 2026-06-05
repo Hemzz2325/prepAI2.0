@@ -1,9 +1,10 @@
+'use client';
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Mail, Phone, MapPin, Send } from 'lucide-react'
-import BackButton from '../_components/BackButton'
+import BackButton from '@/components/BackButton'
 
 function Contact() {
     return (
@@ -28,7 +29,7 @@ function Contact() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-blue-100">Email us</p>
-                                    <p className="font-medium">sales@prepai.com</p>
+                                    <p className="font-medium">sales@placifyai.com</p>
                                 </div>
                             </div>
 

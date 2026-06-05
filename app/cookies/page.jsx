@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import BackButton from '../_components/BackButton';
+import BackButton from '@/components/BackButton';
 import { Cookie, Settings, Users, BarChart3 } from 'lucide-react';
 
 export default function CookiesPage() {
@@ -87,7 +87,7 @@ export default function CookiesPage() {
                         className="mb-12"
                     >
                         <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                            This Cookie Policy explains how PrepAI uses cookies and similar technologies to recognize you
+                            This Cookie Policy explains how Placify AI uses cookies and similar technologies to recognize you
                             when you visit our platform. It explains what these technologies are and why we use them.
                         </p>
                     </motion.div>
@@ -145,10 +145,10 @@ export default function CookiesPage() {
                             If you have any questions about our use of cookies, please contact us at:
                         </p>
                         <a
-                            href="mailto:privacy@prepai.com"
+                            href="mailto:privacy@placifyai.com"
                             className="text-orange-600 font-semibold hover:underline"
                         >
-                            privacy@prepai.com
+                            privacy@placifyai.com
                         </a>
                     </motion.div>
                 </div>

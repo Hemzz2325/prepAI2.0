@@ -11,7 +11,14 @@ export async function POST(req) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, userEmail } = await req.json();
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    body = {};
+  }
+
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, userEmail } = body;
 
   if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !userEmail) {
     return NextResponse.json({ error: "Missing payment details" }, { status: 400 });

@@ -299,7 +299,7 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
                 <span className={`h-2 w-2 rounded-full ${speechStats.fillerCount > 3 ? 'bg-red-500' : 'bg-green-500'}`}></span>
                 <span>Fillers: <strong>{speechStats.fillerCount}</strong></span>
               </div>
-              <div className="text-gray-400">Time: {speechStats.duration}s</div>
+              <div className="text-gray-400 dark:text-gray-500">Time: {speechStats.duration}s</div>
             </div>
           </div>
         )}
@@ -338,20 +338,20 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
         )}
 
         {answerSaved && (
-          <div className="w-full py-3 bg-green-50 text-green-700 rounded-xl font-semibold text-center border border-green-200 flex items-center justify-center gap-2">
+          <div className="w-full py-3 bg-green-50 dark:bg-green-900/20 text-green-700 rounded-xl font-semibold text-center border border-green-200 flex items-center justify-center gap-2">
             <CheckCircle className="h-5 w-5" /> Answer Saved
           </div>
         )}
 
         <div className="flex justify-between items-center px-2">
-          <p className="text-gray-400 text-xs">
+          <p className="text-gray-400 dark:text-gray-500 text-xs">
             {isListening ? "Listening... Speak clearly." : "Click to start recording your answer."}
           </p>
 
           <Button
             variant="ghost"
             size="sm"
-            className={`text-gray-500 hover:text-blue-600 gap-1 ${isSaved ? 'text-blue-600' : ''}`}
+            className={`text-gray-500 dark:text-gray-400 dark:text-gray-500 hover:text-blue-600 gap-1 ${isSaved ? 'text-blue-600' : ''}`}
             onClick={handleSaveQuestion}
             disabled={isSaved}
           >

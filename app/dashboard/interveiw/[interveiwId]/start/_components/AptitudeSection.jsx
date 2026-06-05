@@ -62,7 +62,7 @@ function AptitudeSection({ mockInterviewQuestion, activeQuestionIndex, interview
     }, [activeQuestionIndex]);
 
     return (
-        <div className="flex flex-col mt-10 p-5 border rounded-lg bg-white shadow-sm">
+        <div className="flex flex-col mt-10 p-5 border rounded-lg bg-white dark:bg-gray-900 shadow-sm">
             <h2 className="text-lg font-semibold mb-5">Select the correct answer:</h2>
 
             <div className="grid grid-cols-1 gap-4">
@@ -71,9 +71,9 @@ function AptitudeSection({ mockInterviewQuestion, activeQuestionIndex, interview
                         key={index}
                         onClick={() => handleOptionSelect(option)}
                         className={`p-4 border rounded-lg cursor-pointer transition-all
-              ${selectedOption === option ? 'border-blue-500 bg-blue-50' : 'hover:bg-gray-50'}
-              ${isSubmitted && option === currentQuestion.correctOption ? 'border-green-500 bg-green-50' : ''}
-              ${isSubmitted && selectedOption === option && selectedOption !== currentQuestion.correctOption ? 'border-red-500 bg-red-50' : ''}
+              ${selectedOption === option ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'hover:bg-gray-50 dark:bg-gray-950'}
+              ${isSubmitted && option === currentQuestion.correctOption ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : ''}
+              ${isSubmitted && selectedOption === option && selectedOption !== currentQuestion.correctOption ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : ''}
             `}
                     >
                         {option}
@@ -92,7 +92,7 @@ function AptitudeSection({ mockInterviewQuestion, activeQuestionIndex, interview
             )}
 
             {isSubmitted && (
-                <div className={`mt-6 p-4 rounded-lg ${selectedOption === currentQuestion.correctOption ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                <div className={`mt-6 p-4 rounded-lg ${selectedOption === currentQuestion.correctOption ? 'bg-green-100 dark:bg-green-900/30 text-green-800' : 'bg-red-100 dark:bg-red-900/30 text-red-800'}`}>
                     <strong>{selectedOption === currentQuestion.correctOption ? "Correct!" : "Incorrect!"}</strong>
                     <p className="mt-2 text-sm">{currentQuestion.answer}</p>
                 </div>

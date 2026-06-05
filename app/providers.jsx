@@ -14,9 +14,13 @@ export function AnalyticsProvider({ children }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    const posthog = getPostHogClient();
-    if (posthog) {
-      posthog.capture("$pageview", { path: pathname });
+    try {
+      const posthog = getPostHogClient();
+      if (posthog) {
+        posthog.capture("$pageview", { path: pathname });
+      }
+    } catch (error) {
+      console.warn("[PostHog] Failed to capture pageview:", error);
     }
   }, [pathname]);
 

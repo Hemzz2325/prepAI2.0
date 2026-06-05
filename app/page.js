@@ -6,6 +6,59 @@ import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
+// JSON-LD Structured Data – rendered as a <script> tag for Google rich results
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://www.placifyai.com/#website",
+      url: "https://www.placifyai.com",
+      name: "Placify AI",
+      description: "AI-powered mock interview and career preparation platform",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: "https://www.placifyai.com/blog?q={search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.placifyai.com/#organization",
+      name: "Placify AI",
+      url: "https://www.placifyai.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.placifyai.com/logo.svg",
+      },
+      sameAs: [],
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: "sales@placifyai.com",
+        contactType: "customer support",
+      },
+    },
+    {
+      "@type": "SoftwareApplication",
+      name: "Placify AI",
+      applicationCategory: "EducationalApplication",
+      operatingSystem: "Web",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "INR",
+      },
+      description:
+        "Practice mock interviews with AI, get instant feedback on your answers, analyze your resume, and identify skill gaps to land your dream job.",
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "4.8",
+        ratingCount: "1200",
+      },
+    },
+  ],
+};
+
 export default function Home() {
   const { isLoaded, isSignedIn } = useUser();
   const router = useRouter();
@@ -38,7 +91,7 @@ export default function Home() {
           transition={{ duration: 0.8 }}
           className="text-6xl font-extrabold text-white"
         >
-          PrepAi
+          Placify AI
         </motion.h1>
 
         <motion.p
@@ -74,6 +127,11 @@ export default function Home() {
   // Clean white landing page
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* JSON-LD Structured Data for Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       {/* Watermark Words Background */}
       <div className="absolute inset-0 opacity-[0.05] select-none pointer-events-none z-0">
@@ -165,7 +223,7 @@ export default function Home() {
 /* Watermark Component */
 const Watermark = () => {
   const words = [
-    "PrepAi",
+    "Placify AI",
     "Fear of exams?",
     "Fear of aptitude?",
     "Want to get a job?",

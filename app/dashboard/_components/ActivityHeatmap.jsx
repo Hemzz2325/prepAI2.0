@@ -32,12 +32,12 @@ function ActivityHeatmap({ interviewList }) {
     }
 
     return (
-        <div className="p-5 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 h-full">
+        <div className="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300 h-full">
             <div className="flex items-center gap-2 mb-4">
-                <div className="p-2 bg-green-50 rounded-lg">
+                <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
                     <span className="text-lg">🔥</span>
                 </div>
-                <h2 className="font-bold text-gray-800">Activity Streak</h2>
+                <h2 className="font-bold text-gray-800 dark:text-gray-100">Activity Streak</h2>
             </div>
             <div className="w-full h-full flex items-center justify-center">
                 <CalendarHeatmap

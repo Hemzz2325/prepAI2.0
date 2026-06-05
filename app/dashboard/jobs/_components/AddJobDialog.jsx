@@ -51,19 +51,19 @@ function AddJobDialog({ onClose, onSuccess }) {
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-6 relative">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                    className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:text-gray-300"
                 >
                     <X className="w-6 h-6" />
                 </button>
 
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Add New Job</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Add New Job</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                             Company Name *
                         </label>
                         <input
@@ -72,14 +72,14 @@ function AddJobDialog({ onClose, onSuccess }) {
                             onChange={(e) =>
                                 setFormData({ ...formData, companyName: e.target.value })
                             }
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="e.g., Google"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                             Job Role *
                         </label>
                         <input
@@ -88,7 +88,7 @@ function AddJobDialog({ onClose, onSuccess }) {
                             onChange={(e) =>
                                 setFormData({ ...formData, jobRole: e.target.value })
                             }
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="e.g., Senior Software Engineer"
                             required
                         />
@@ -96,7 +96,7 @@ function AddJobDialog({ onClose, onSuccess }) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                                 Salary
                             </label>
                             <input
@@ -105,12 +105,12 @@ function AddJobDialog({ onClose, onSuccess }) {
                                 onChange={(e) =>
                                     setFormData({ ...formData, salary: e.target.value })
                                 }
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="e.g., $120k"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                                 Location
                             </label>
                             <input
@@ -119,14 +119,14 @@ function AddJobDialog({ onClose, onSuccess }) {
                                 onChange={(e) =>
                                     setFormData({ ...formData, location: e.target.value })
                                 }
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="e.g., Remote"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                             Job URL
                         </label>
                         <input
@@ -135,13 +135,13 @@ function AddJobDialog({ onClose, onSuccess }) {
                             onChange={(e) =>
                                 setFormData({ ...formData, jobUrl: e.target.value })
                             }
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="https://..."
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                             Notes
                         </label>
                         <textarea
@@ -149,7 +149,7 @@ function AddJobDialog({ onClose, onSuccess }) {
                             onChange={(e) =>
                                 setFormData({ ...formData, notes: e.target.value })
                             }
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             rows="3"
                             placeholder="Any additional notes..."
                         />
@@ -159,7 +159,7 @@ function AddJobDialog({ onClose, onSuccess }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                            className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:bg-gray-950 transition-colors"
                         >
                             Cancel
                         </button>

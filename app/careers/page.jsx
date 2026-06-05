@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Briefcase, MapPin, Clock, Zap } from 'lucide-react';
-import BackButton from '../_components/BackButton';
+import BackButton from '@/components/BackButton';
 
 export default function CareersPage() {
     const positions = [
@@ -27,7 +27,7 @@ export default function CareersPage() {
             department: "Design",
             location: "Remote",
             type: "Full-time",
-            description: "Shape the user experience of PrepAi and create intuitive, beautiful interfaces for our users."
+            description: "Shape the user experience of Placify AI and create intuitive, beautiful interfaces for our users."
         },
         {
             title: "Growth Marketing Manager",

@@ -35,9 +35,9 @@ function Footer() {
     };
 
     const socialLinks = [
-        { icon: <Twitter className="w-5 h-5" />, href: "#", color: "hover:text-blue-400" },
-        { icon: <Linkedin className="w-5 h-5" />, href: "#", color: "hover:text-blue-700" },
-        { icon: <Instagram className="w-5 h-5" />, href: "#", color: "hover:text-pink-600" }
+        { icon: <Twitter className="w-5 h-5" />, href: "https://twitter.com/placifyai", color: "hover:text-blue-400", label: "Twitter" },
+        { icon: <Linkedin className="w-5 h-5" />, href: "https://linkedin.com/company/placifyai", color: "hover:text-blue-700", label: "LinkedIn" },
+        { icon: <Instagram className="w-5 h-5" />, href: "https://www.instagram.com/placify__ai", color: "hover:text-pink-600", label: "Instagram" }
     ];
 
     const footerLinks = {
@@ -50,7 +50,6 @@ function Footer() {
         company: [
             { label: "About Us", href: "/about" },
             { label: "Contact Sales", href: "/contact" },
-            { label: "Careers", href: "/careers" },
             { label: "Blog", href: "/blog" }
         ],
         legal: [
@@ -61,7 +60,7 @@ function Footer() {
     };
 
     return (
-        <footer className="bg-white dark:bg-gray-950 text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 relative overflow-hidden">
+        <footer className="bg-white dark:bg-gray-900 dark:bg-gray-950 text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-700 dark:border-gray-800 relative overflow-hidden">
             {/* Decorative background elements */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600" />
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -82,11 +81,11 @@ function Footer() {
                                 whileHover={{ rotate: 360 }}
                                 transition={{ duration: 0.7 }}
                             >
-                                <Image src="/logo.svg" alt="PrepAi Logo" width={32} height={32} />
+                                <Image src="/logo.svg" alt="Placify AI Logo" width={32} height={32} />
                             </motion.div>
-                            <span className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-green-600 transition-colors">PrepAi</span>
+                            <span className="text-xl font-bold text-gray-900 dark:text-white dark:text-white group-hover:text-green-600 transition-colors">Placify AI</span>
                         </Link>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-sm leading-relaxed">
+                        <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 dark:text-gray-500 mb-6 max-w-sm leading-relaxed">
                             AI-driven interview preparation to help you land your dream job. Master your skills with personalized feedback and real-time coaching.
                         </p>
                         <div className="flex gap-4">
@@ -96,7 +95,7 @@ function Footer() {
                                     href={social.href}
                                     whileHover={{ scale: 1.1, y: -2 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className={`p-2 rounded-full bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-400 transition-colors ${social.color}`}
+                                    className={`p-2 rounded-full bg-gray-100 dark:bg-gray-800 dark:bg-gray-900 text-gray-600 dark:text-gray-300 dark:text-gray-400 dark:text-gray-500 transition-colors ${social.color}`}
                                 >
                                     {social.icon}
                                 </motion.a>
@@ -107,7 +106,7 @@ function Footer() {
                     {/* Links Sections */}
                     {Object.entries(footerLinks).map(([title, links]) => (
                         <motion.div variants={itemVariants} key={title}>
-                            <h3 className="text-gray-900 dark:text-white font-bold text-sm uppercase tracking-wider mb-4">
+                            <h3 className="text-gray-900 dark:text-white dark:text-white font-bold text-sm uppercase tracking-wider mb-4">
                                 {title}
                             </h3>
                             <ul className="space-y-3">

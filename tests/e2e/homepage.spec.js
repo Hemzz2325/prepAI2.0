@@ -15,8 +15,8 @@ test.describe("Homepage", () => {
 
   test("homepage navigation links work", async ({ page }) => {
     await page.goto("/");
-    // Check that major nav links exist
-    const signInLink = page.locator("a[href*='sign-in'], a[href*='login']").first();
+    // Check that major nav links or buttons exist (e.g. Clerk sign-in modal triggers)
+    const signInLink = page.locator("button:has-text('Get Started Free'), a[href*='sign-in'], a[href*='login']").first();
     await expect(signInLink).toBeVisible({ timeout: 10000 });
   });
 

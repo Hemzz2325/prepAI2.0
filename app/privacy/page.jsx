@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import BackButton from '../_components/BackButton';
+import BackButton from '@/components/BackButton';
 import { Shield, Lock, Eye, FileText } from 'lucide-react';
 
 export default function PrivacyPolicyPage() {
@@ -83,7 +83,7 @@ export default function PrivacyPolicyPage() {
                         className="prose prose-lg dark:prose-invert max-w-none mb-12"
                     >
                         <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                            At PrepAI, we take your privacy seriously. This Privacy Policy explains how we collect, use,
+                            At Placify AI, we take your privacy seriously. This Privacy Policy explains how we collect, use,
                             and protect your personal information when you use our AI-powered interview preparation platform.
                         </p>
                     </motion.div>
@@ -132,10 +132,10 @@ export default function PrivacyPolicyPage() {
                             If you have any questions or concerns about our privacy practices, please contact us at:
                         </p>
                         <a
-                            href="mailto:privacy@prepai.com"
+                            href="mailto:privacy@placifyai.com"
                             className="text-blue-600 font-semibold hover:underline"
                         >
-                            privacy@prepai.com
+                            privacy@placifyai.com
                         </a>
                     </motion.div>
                 </div>

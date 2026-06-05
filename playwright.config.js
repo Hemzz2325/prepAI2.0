@@ -1,5 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
+// Fallback to D: drive path if not set to prevent C: drive disk space issues (ENOSPC)
+if (!process.env.PLAYWRIGHT_BROWSERS_PATH) {
+  process.env.PLAYWRIGHT_BROWSERS_PATH = "d:\\PrepAi\\.playwright-browsers";
+}
+
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
@@ -18,9 +23,9 @@ export default defineConfig({
     },
   ],
   // Auto-start dev server in CI when not already running
-  // webServer: {
-  //   command: "npm run dev",
-  //   url: "http://localhost:3000",
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: "npm run dev",
+    url: "http://localhost:3000",
+    reuseExistingServer: !process.env.CI,
+  },
 });
