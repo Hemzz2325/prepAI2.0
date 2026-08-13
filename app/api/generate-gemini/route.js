@@ -26,7 +26,7 @@ export async function POST(req) {
 
     const { prompt } = validation.data;
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
         { error: "API key configuration error" },
@@ -34,38 +34,36 @@ export async function POST(req) {
       );
     }
 
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 2048,
-          },
-        }),
-      }
-    );
+    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7,
+        max_tokens: 4096,
+      }),
+    });
 
-    const data = await geminiRes.json();
+    const data = await groqRes.json();
 
-    if (!geminiRes.ok) {
+    if (!groqRes.ok) {
       return NextResponse.json(
-        { error: "Gemini API request failed", details: data, statusCode: geminiRes.status },
-        { status: geminiRes.status }
+        { error: "Groq API request failed", details: data, statusCode: groqRes.status },
+        { status: groqRes.status }
       );
     }
 
-    if (!data.candidates?.[0]?.content) {
+    const textContent = data.choices?.[0]?.message?.content;
+    if (!textContent) {
       return NextResponse.json(
-        { error: "Invalid response from Gemini API", details: data },
+        { error: "Invalid response from Groq API", details: data },
         { status: 500 }
       );
     }
-
-    const textContent = data.candidates[0].content.parts.map((p) => p.text).join("");
 
     return NextResponse.json({ ok: true, status: 200, data: textContent }, { status: 200 });
   } catch (error) {

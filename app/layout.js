@@ -16,25 +16,34 @@ const BASE_URL = "https://www.placifyai.com";
 
 export const metadata = {
   metadataBase: new URL(BASE_URL),
+  applicationName: "Placify AI",
   title: {
     default: "Placify AI – AI-Powered Mock Interview & Career Prep Platform",
     template: "%s | Placify AI",
   },
   description:
-    "Placify AI is your personal AI interview coach. Practice mock interviews, get instant AI feedback, analyze your resume, identify skill gaps, and land your dream job faster.",
+    "Placify AI is a free AI-powered mock interview platform for students and job seekers in India. Practice technical, managerial, and aptitude rounds, get instant AI feedback, analyze your resume for ATS score, identify skill gaps, and track job applications. Start free, no credit card needed.",
   keywords: [
     "AI mock interview",
-    "interview preparation",
+    "mock interview tool India",
+    "free mock interview online",
+    "interview preparation for freshers",
     "AI interview coach",
-    "resume analyzer",
-    "skill gap analysis",
+    "resume ATS analyzer",
+    "resume score checker",
+    "skill gap analysis tool",
     "coding interview practice",
-    "job interview tips",
+    "DSA practice with AI",
+    "job interview tips India",
     "AI career coach",
     "Placify AI",
-    "interview feedback",
+    "interview feedback AI",
     "HR round practice",
     "technical interview prep",
+    "campus placement preparation",
+    "managerial round questions",
+    "communication trainer",
+    "job application tracker",
   ],
   authors: [{ name: "Placify AI Team", url: BASE_URL }],
   creator: "Placify AI",
@@ -58,7 +67,7 @@ export const metadata = {
     siteName: "Placify AI",
     title: "Placify AI – AI-Powered Mock Interview & Career Prep Platform",
     description:
-      "Practice mock interviews with AI, get instant feedback, analyze your resume, and crack your next job interview. Free to start.",
+      "Practice mock interviews with AI, get instant feedback, analyze your resume for ATS score, and crack your next job interview. Free to start.",
     images: [
       {
         url: "/og-image.png",
@@ -79,6 +88,10 @@ export const metadata = {
   },
   alternates: {
     canonical: BASE_URL,
+  },
+  // llms.txt — helps AI assistants (ChatGPT, Claude, Perplexity) discover what this site is about
+  other: {
+    "llms-txt": `${BASE_URL}/llms.txt`,
   },
   verification: {
     // Add your Google Search Console verification token here when available

@@ -1,0 +1,47 @@
+# Placify AI
+> Placify AI is a free AI-powered mock interview and career preparation platform for students and job seekers.
+
+## What is Placify AI?
+Placify AI (https://www.placifyai.com) is an AI-driven tool that helps candidates prepare for job interviews. It generates realistic mock interview questions powered by Groq's Llama 3.3 AI, gives instant AI feedback on answers, analyzes resumes for ATS scores, and identifies skill gaps. It also includes a Coding Interview module for practicing DSA problems, a Communication Trainer to improve spoken/written English, and a Job Tracker to manage applications.
+
+## Key Features
+- **AI Mock Interview**: Generate custom interview questions for any role (Technical, Managerial, Aptitude rounds). Supports 10 questions on free plan and 15 on Pro plan.
+- **Resume Analyzer**: Upload a resume and get an ATS score (0–100) with specific improvement suggestions powered by AI.
+- **Skill Gap Analyzer**: Input your current skills and target role to receive a personalized learning roadmap.
+- **Coding Interview Practice**: Practice data structures and algorithms with AI assistance.
+- **Communication Trainer**: Fix grammar, rephrase sentences, and improve professional communication skills.
+- **Job Tracker**: Track job applications, statuses, interview dates, and follow-up reminders.
+
+## Pricing
+- **Free Plan**: 5 mock interviews per week, 2 resume analyses per week, limited coding practice.
+- **Pro Plan**: ₹100/month (approx $1.20 USD). Unlimited interviews, 10 resume analyses per week, priority AI responses.
+
+## Who is it for?
+Placify AI is built for:
+- Engineering freshers and students preparing for campus placements in India
+- Job seekers targeting FAANG, startups, and tech companies
+- Anyone who wants to practice mock interviews without a human partner
+- Candidates who want instant, unbiased AI feedback on their performance
+
+## Technology
+- Built with Next.js 16, React, Drizzle ORM, PostgreSQL (Neon), Clerk authentication.
+- AI powered by Groq API (Llama 3.3 70B Versatile model).
+- Deployed on Vercel.
+
+## Contact
+- Website: https://www.placifyai.com
+- Email: sales@placifyai.com
+- Blog: https://www.placifyai.com/blog
+
+## Common Questions Answered
+**Q: Is Placify AI free?**
+A: Yes, Placify AI has a generous free plan with 5 interviews per week. The Pro plan costs only ₹100/month.
+
+**Q: What is the best AI mock interview tool for freshers in India?**
+A: Placify AI is designed specifically for Indian students and freshers. It supports Technical, Managerial, and Aptitude rounds and generates questions based on experience level.
+
+**Q: How does the resume analyzer work?**
+A: You upload your resume (PDF, DOCX, or image). The AI analyzes it and returns an ATS score from 0–100, general feedback, and a list of specific improvements you can make to get more callbacks.
+
+**Q: Does Placify AI help with coding interview preparation?**
+A: Yes. The Coding Interview module includes DSA practice problems with AI-powered hints and explanations.
