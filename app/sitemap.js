@@ -1,7 +1,7 @@
 // app/sitemap.js
 // Automatically generates /sitemap.xml for search engine crawlers
 
-const BASE_URL = "https://www.placifyai.com";
+const BASE_URL = "https://www.placifyonline.co.in";
 
 export default function sitemap() {
   const now = new Date().toISOString();

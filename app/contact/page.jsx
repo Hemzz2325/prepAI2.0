@@ -29,7 +29,7 @@ function Contact() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-blue-100">Email us</p>
-                                    <p className="font-medium">sales@placifyai.com</p>
+                                    <p className="font-medium">sales@placifyonline.com</p>
                                 </div>
                             </div>
 

@@ -132,10 +132,10 @@ export default function PrivacyPolicyPage() {
                             If you have any questions or concerns about our privacy practices, please contact us at:
                         </p>
                         <a
-                            href="mailto:privacy@placifyai.com"
+                            href="mailto:privacy@placifyonline.com"
                             className="text-blue-600 font-semibold hover:underline"
                         >
-                            privacy@placifyai.com
+                            privacy@placifyonline.com
                         </a>
                     </motion.div>
                 </div>

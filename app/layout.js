@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const BASE_URL = "https://www.placifyai.com";
+const BASE_URL = "https://www.placifyonline.co.in";
 
 export const metadata = {
   metadataBase: new URL(BASE_URL),
@@ -79,8 +79,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@placifyai",
-    creator: "@placifyai",
+    site: "@placifyonline",
+    creator: "@placifyonline",
     title: "Placify AI – AI-Powered Mock Interview & Career Prep Platform",
     description:
       "Practice mock interviews with AI, get instant feedback, analyze your resume, and crack your next job interview. Free to start.",
@@ -94,8 +94,7 @@ export const metadata = {
     "llms-txt": `${BASE_URL}/llms.txt`,
   },
   verification: {
-    // Add your Google Search Console verification token here when available
-    // google: "your-google-verification-code",
+    google: "pC33NqRRYl6yh1qQQynTnzslHRswMObZFelDSMW_Q8k",
   },
 };
 

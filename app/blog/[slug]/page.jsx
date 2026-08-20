@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Clock } from 'lucide-react';
@@ -14,11 +14,17 @@ export async function generateMetadata({ params: paramsPromise }) {
     return {
         title: `${post.title} | Placify AI Blog`,
         description: post.excerpt,
+        alternates: {
+            canonical: `https://www.placifyonline.co.in/blog/${post.slug}`,
+        },
         openGraph: {
             title: post.title,
             description: post.excerpt,
             type: 'article',
-            url: `https://www.placifyai.com/blog/${post.slug}`,
+            publishedTime: post.date,
+            authors: [post.author],
+            url: `https://www.placifyonline.co.in/blog/${post.slug}`,
+            siteName: 'Placify AI',
             images: [
                 {
                     url: post.image,
@@ -52,8 +58,40 @@ export default async function BlogPostPage({ params: paramsPromise }) {
         notFound();
     }
 
+    // Article JSON-LD for Google rich results
+    const articleJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: post.title,
+        description: post.excerpt,
+        image: post.image,
+        datePublished: post.date,
+        dateModified: post.date,
+        author: {
+            "@type": "Person",
+            name: post.author,
+        },
+        publisher: {
+            "@type": "Organization",
+            name: "Placify AI",
+            logo: {
+                "@type": "ImageObject",
+                url: "https://www.placifyonline.co.in/logo.svg",
+            },
+        },
+        mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `https://www.placifyonline.co.in/blog/${post.slug}`,
+        },
+        url: `https://www.placifyonline.co.in/blog/${post.slug}`,
+    };
+
     return (
         <div className="min-h-screen bg-background text-foreground py-12">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+            />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 {/* Back button */}

@@ -7,11 +7,11 @@ export const metadata = {
   description:
     'Upgrade to Placify AI Pro for just ₹100 – one-time, lifetime access. Get unlimited AI mock interviews, resume analyses, skill gap reports, and coding challenges.',
   keywords: ['AI interview prep pricing', 'mock interview subscription', 'interview prep lifetime deal', 'Placify AI Pro'],
-  alternates: { canonical: 'https://www.placifyai.com/upgrade' },
+  alternates: { canonical: 'https://www.placifyonline.co.in/upgrade' },
   openGraph: {
     title: 'Upgrade to Placify AI Pro – Lifetime Access for ₹100',
     description: 'One-time payment. Unlimited AI interviews, resume analysis, coding challenges, and more. No recurring fees.',
-    url: 'https://www.placifyai.com/upgrade',
+    url: 'https://www.placifyonline.co.in/upgrade',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {

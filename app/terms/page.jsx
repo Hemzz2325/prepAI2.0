@@ -124,10 +124,10 @@ export default function TermsPage() {
                             If you have any questions about these Terms of Service, please contact us at:
                         </p>
                         <a
-                            href="mailto:legal@placifyai.com"
+                            href="mailto:legal@placifyonline.com"
                             className="text-green-600 font-semibold hover:underline"
                         >
-                            legal@placifyai.com
+                            legal@placifyonline.com
                         </a>
                     </motion.div>
                 </div>

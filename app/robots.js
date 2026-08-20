@@ -1,7 +1,7 @@
 // app/robots.js
 // Automatically generates /robots.txt for search engine crawlers and AI bots
 
-const BASE_URL = "https://www.placifyai.com";
+const BASE_URL = "https://www.placifyonline.co.in";
 
 export default function robots() {
   return {

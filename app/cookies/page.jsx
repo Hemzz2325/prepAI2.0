@@ -145,10 +145,10 @@ export default function CookiesPage() {
                             If you have any questions about our use of cookies, please contact us at:
                         </p>
                         <a
-                            href="mailto:privacy@placifyai.com"
+                            href="mailto:privacy@placifyonline.com"
                             className="text-orange-600 font-semibold hover:underline"
                         >
-                            privacy@placifyai.com
+                            privacy@placifyonline.com
                         </a>
                     </motion.div>
                 </div>
