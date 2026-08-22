@@ -10,5 +10,10 @@ export default clerkMiddleware(async (auth, req) => {
 });
 
 export const config = {
-    matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+    matcher: [
+        // Skip static files, _next, sitemap.xml, robots.txt, llms.txt
+        "/((?!.*\\..*|_next|sitemap\\.xml|robots\\.txt|llms\\.txt|favicon\\.ico).*)",
+        "/",
+        "/(api|trpc)(.*)",
+    ],
 };
